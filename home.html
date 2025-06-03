@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Delicious Bites🍔</title>
+
+    <!-- <link rel="import" href="ui_elements.html" /> -->
+    <link rel="stylesheet" href="styles/basestyle.css" />
+    <link rel="stylesheet" href="styles/mystyle.css" />
+
+    <script type="text/javascript" src="scripts/defaultUtility.js"></script>
+    <script type="text/javascript" src="scripts/defaultUI.js"></script>
+    <script type="text/javascript">
+        window.addEventListener('click', closeWindow);
+    </script>
+
+    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+
+    <script type="text/javascript" src="scripts/ui_elements.js"></script>
+</head>
+
+
+<body style= "background: url('assets/img/bgimg.jpg') repeat">
+
+    <div id="header-footer"></div>
+    <div id="navbar"></div>
+
+    <section id="about">
+        <h2 style="color: white">About Us</h2>
+        <div class="about-section">
+            <p>Welcome to Delicious Bites, where flavor meets perfection. We are passionate about delivering exceptional dining experiences to our guests.</p>
+            <p>Our culinary team crafts each dish with care, using only the freshest ingredients sourced from local farmers and suppliers. From savory appetizers to delectable desserts, every bite is a celebration of taste.</p>
+            <p>At Delicious Bites, we believe in more than just great food; we believe in creating memories. Whether you're joining us for a romantic dinner, a family gathering, or a casual lunch with friends, our warm atmosphere and attentive service ensure that every moment is unforgettable.</p> 
+            <p>Come savor the experience at Delicious Bites. Good Times Await!</p>
+        </div>
+      </section>
+
+    <section id="menu">
+        <h1>MENU</h1>
+
+        <div class="grid">
+            <template id="menu-entry">
+                <div class="menu-entry">
+                    <img class="item-img"/>
+                    <br>
+                    <p class="details"></p>
+                </div>
+            </template>
+
+        </div>
+
+    </section>
+
+    <script type="text/javascript" src="scripts/init_menu.js" ></script>
+    <script>
+        placeBase();
+        renderMenu();
+    </script>
+
+</body>
+</html>

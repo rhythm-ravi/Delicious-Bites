@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cart</title>
+    <link rel="stylesheet" href="styles/basestyle.css" />
+    <link rel="stylesheet" href="styles/cart.css" />
+
+
+    <script type="text/javascript" src="scripts/defaultUtility.js"></script>
+    <script type="text/javascript" src="scripts/defaultUI.js"></script>
+
+    <script type="text/javascript">
+        window.addEventListener('click', closeWindow);
+    </script>
+    
+    <script type="text/javascript" src="scripts/ui_elements.js"></script>
+    
+    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+
+</head>
+<body>
+
+    <div id="header-footer"></div>
+    <div id="navbar"></div>
+
+
+    <div class="container">
+        <h1>Cart</h1>
+        <div class="cart">
+            <table class="cart-table">
+                <thead>
+                    <tr>
+                        <th>S. No.</th>
+                        <th>Name of Item</th>
+                        <th>Price per qty ($)</th>
+                        <th>Quantity</th>
+                        <th>Total Price ($)</th>
+                    </tr>
+                </thead>
+                <tbody>
+
+                </tbody>
+            </table>
+        </div>
+        <div class="checkout">
+            <button class="checkout-btn">Checkout</button>
+        </div>
+
+    </div>
+
+    <script type="text/javascript" src="scripts/init_cart.js"></script>
+    <script>
+        placeBase();
+        console.log(user);
+        renderCart();
+    </script>
+
+</body>
+</html>
+
+
+                    <!-- <tr>
+                        <td>2</td>
+                        <td>Peri-Peri Drumsticks</td>
+                        <td>$10</td>
+                        <td>2</td>
+                        <td class="price">$20.00</td>
+                    </tr>
+
+                    <tr>
+                        <td>1</td>
+                        <td>Tower of Pancakes</td>
+                        <td>$14</td>
+                        <td>1</td>
+                        <td class="price">$14.00</td>
+                    </tr> -->
+                    <!-- Additional rows will be dynamically added here -->
+                    <!-- <tr>
+                        <td colspan="4" class="summary">Total Amount Payable</td>
+                        <td class="total-amount">$34.00</td>
+                    </tr> -->
+
+                    <!-- <style>
+                        .container {
+                            max-width: 800px;
+                            margin: 20px auto;
+                            padding: 20px;
+                            border: 1px solid #ccc;
+                            border-radius: 5px;
+                        }
+                
+                        h1 {
+                            text-align: center;
+                        }
+                
+                        .cart {
+                            border: 1px solid #ccc;
+                            border-radius: 5px;
+                            padding: 10px;
+                            margin-bottom: 20px;
+                        }
+                
+                        .checkout {
+                            text-align: center;
+                        }
+                
+                        .checkout-btn {
+                            background-color: #4CAF50;
+                            color: white;
+                            padding: 10px 20px;
+                            font-size: 16px;
+                            border: none;
+                            border-radius: 5px;
+                            cursor: pointer;
+                        }
+                
+                        .checkout-btn:hover {
+                            background-color: #45a049;
+                        }
+                
+                
+                        .cart-table {
+                            width: 100%;
+                            border-collapse: collapse;
+                            margin-top: 20px;
+                        }
+                
+                        .cart-table th, .cart-table td {
+                            border: 1px solid #ddd;
+                            padding: 8px;
+                            text-align: left;
+                        }
+                
+                        .cart-table th {
+                            background-color: #971010;
+                        }
+                
+                        .summary {
+                            text-align: right;
+                            font-weight: bold;
+                        }
+                
+                        .total-amount {
+                            font-weight: bold;
+                        }
+                
+                
+                /* 
+                        header {
+                            background-color: #7f0c0c;
+                            color: #fff;
+                            padding: 10px;
+                            margin: 0px;
+                            text-align: center;
+                        }
+                
+                        nav {
+                            background-color: #971010;
+                            padding: 12px;
+                            text-align: center;
+                        }
+                
+                        nav a {
+                            color: #fff;
+                            text-decoration: none;
+                            padding: 10px;
+                        }
+                
+                        nav a:hover {
+                            background-color: #646464;
+                        } */
+                        #cart {
+                            background-color: #646464;
+                
+                        }
+                
+                
+                /* 
+                        footer {
+                            background-color: #7f0c0c;
+                            color: #fff;
+                            padding: 10px;
+                            text-align: center;
+                            position: fixed;
+                            bottom: 0;
+                            width: 100%;
+                        } */
+                
+                        tr {
+                            display: table-row;
+                            width: 100%;
+                        }
+                    </style> -->

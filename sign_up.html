@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign Up</title>
+    
+    <link rel="stylesheet" href="styles/basestyle.css"/>
+    <link rel="stylesheet" href="styles/login.css"/>
+    
+    <script type="text/javascript" src="scripts/defaultUtility.js"></script>
+    <script type="text/javascript" src="scripts/defaultUI.js"></script>
+
+    <script type="text/javascript">
+        window.addEventListener('click', closeWindow);
+        // console.log("Listener should be added?");
+    </script>
+    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+    
+    <script type="text/javascript" src="scripts/sign_up.js"></script>
+</head>
+<body>
+    <div id="header-footer"></div>
+    <div id="navbar"></div>
+    
+    <!-- Need to change class   --- Done -->
+    <!-- concat field names already existing, hidden thingy that shows up when non-empty field (eg password don't match, and so on)-->
+    <!-- Also change some fields to null in mydql db -->
+    <div class="container signup-box"> 
+        <h2>Sign Up</h2>
+        <form action="javascript:void(0)" method="POST" onSubmit="handleSignUp(event)">
+            <input type="text" id="first-name" name="first-name" placeholder="First Name" required>
+            <input type="text" id="last-name" name="last-name" placeholder="Last Name">
+            <input type="text" id="username" name="username" placeholder="username" required>
+
+            <!-- May need to change type for mobile number, since rn not really optimal -->
+            <input type="text" id="mobile-number" name="mobile-number" placeholder="Mobile Number" required>
+            <input type="email" id="email" name="email" placeholder="Email id" required>
+            
+            <span id="strength-error" class="verify-error">Password not Strong!</span>
+            <input type="password" id="password" name="password" placeholder="Password" maxlength="30" required>
+            <span id="match-error" class="verify-error">Make sure the passwords match!</span>
+            <input type="password" id="confirm-password" name="confirm-password" placeholder="Confirm Password" required>
+
+            <input type="text" id="address" name="address" placeholder="Address" required>
+
+            <input type="submit" id="submit-button" value="Create Account">
+        </form>
+    </div>
+
+    <script>
+        placeBase();
+        addListeners();
+    </script>
+
+</body>
+</html>

@@ -1,0 +1,88 @@
+
+/* specifies base style for common theme */
+body {
+    font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #d9bc91;
+
+    text-align: center;
+}
+
+header {
+    background-color: #7f0c0c;
+    color: #fff;
+    padding: 10px;
+    text-align: center;
+}
+
+nav {
+    background-color: #971010;
+    padding: 12px;
+    text-align: center;
+}
+
+nav a {
+    color: #fff;
+    text-decoration: none;
+    padding: 10px;
+}
+
+nav a:hover {
+    background-color: #646464;
+}
+
+footer {
+    background-color: #7f0c0c;
+    color: #fff;
+    padding: 10px;
+    text-align: center;
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+}
+
+button {
+    border-radius: 10px;
+    padding: 10px;
+    cursor: pointer;
+}
+
+.container {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+
+    top: 50%;   left: 50%;
+    /*  */
+    /* width: 300px;
+    position: absolute;
+    transform: translate(-50%, -50%); */
+
+    /* margin: 150px auto; */
+}
+.login-box {
+    width: 300px;
+    position: absolute;
+    transform: translate(-50%, -50%);
+}
+
+
+/* Hover over user name */
+.tooltip {
+    display: none;
+    position: relative;
+    /* bottom: 10px;
+    left: 50%; */
+    /* transform: translateY(+50%); */
+    background-color: rgba(255, 255, 255, 0.7);
+    color: white;
+    padding: 5px 10px;
+    border-radius: 5px;
+    font-size: 14px;
+    /* z-index: 10; */
+}
+.user-card:hover .tooltip {
+    display: block;
+}
