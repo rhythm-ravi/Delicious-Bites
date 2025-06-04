@@ -24,8 +24,14 @@ function handleLogin(event) {
             console.log(user.getCart());
 
             // console.log(data.items[2]);
-            window.location.href = "success_login.html";
-
+            alert(`Welcome ${user.getUserName()}!`);
+            // window.location.href = "home.html";
+            // console.log(`I guess this never executed 
+            //             (because above line marks the curr_page for unload 
+            //             and new_page for load, 
+            //             which means js exec context is torn and therefore no js can now be executed from this page
+            //             (since it is being unloaded)
+            // `);
         } else {
             window.location.href = "failure_login.html";
         }
@@ -36,5 +42,3 @@ function handleLogin(event) {
     .catch(error => console.error('Some sort of error:', error));
 
 }
-
-// handleLogin();

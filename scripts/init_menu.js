@@ -23,12 +23,12 @@ function renderMenu() {
 
 function init_menu(records) {
 
-    //////////////////////////////////////////////
-    if (user.getUserId() != null) {         // logged in ig
-        alert(`Welcome ${user.getUserName()}!`);
-        console.log(user.getCart());
-    }
-    //////////////////////////////////////////////
+    // //////////////////////////////////////////////
+    // if (user.getUserId() != null) {         // logged in ig
+    //     alert(`Welcome ${user.getUserName()}!`);
+    //     console.log(user.getCart());
+    // }
+    // //////////////////////////////////////////////
 
     window.customElements.define('interact-btn', InteractButton);
     window.customElements.define('non-interact-btn', NonInteractButton);

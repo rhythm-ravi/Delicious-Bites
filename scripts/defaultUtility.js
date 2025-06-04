@@ -8,14 +8,14 @@ const user = {
         return localStorage.getItem('userId');
     },
     getCart: function() {
-        return JSON.parse(localStorage.getItem('items')) || {};
+        return JSON.parse(localStorage.getItem('items')) || {};     // return js obj from string stored in local storage
         // return localStorage.getItem('items');
     },
     addQty: function(id, qty) {
         // id = toString(id);
         let cart = this.getCart();
 
-        if (!cart[id]) this.addCartItem(id, 0);
+        if (!cart[id]) cart[id] = 0;
         cart[id] += qty;
         if (cart[id]<=0) {
             delete cart[id];

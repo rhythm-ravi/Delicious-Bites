@@ -8,23 +8,22 @@ class InteractButton extends HTMLElement {
     }
 
     incrementCount() {
-        this.count = user.addQty(this.itemId, 1);   // add 1 to this items qty in local storage
+        // this.count = user.addQty(this.itemId, 1);   // add 1 to this items qty in local storage
         // alert(`More for you😋 ${this.count}`);
+        user.addQty(this.itemId, 1);
         this.updateDisplay();
     }
     decrementCount() {
-        this.count = user.addQty(this.itemId, -1);
-        // alert(`More for you😋 ${this.count}`);
+        // this.count = user.addQty(this.itemId, -1);
+        // alert(`Less for you🤦‍♀️ ${this.count}`);
+        user.addQty(this.itemId, -1);
         this.updateDisplay();
     }
     updateDisplay() {
-        // this.count = user.getCart()[this.itemId];
-        // console.log(user.getCart());
-        // console.log(this.count);
-        if (this.count) {   // +ve int
+        if (user.getCart()[this.itemId]) {   // +ve int
             this.innerHTML = `
                 <span class="alter-cnt">
-                    <span class="item-qty">${this.count}</span>
+                    <span class="item-qty">${user.getCart()[this.itemId]}</span>
                     <button class="item-btn plus-item" type="button">+</button>
                     <button class="item-btn minus-item" type="button">-</button>
                 </span>
@@ -42,7 +41,8 @@ class InteractButton extends HTMLElement {
                 const plusButton = this.querySelector(".plus-item");
                 plusButton.addEventListener('click', this.incrementCount.bind(this));
                 const minusButton = this.querySelector(".minus-item");
-                minusButton.addEventListener('click', this.decrementCount.bind(this));
+                if (minusButton)
+                    minusButton.addEventListener('click', this.decrementCount.bind(this));
             } catch (error) {
                 console.log("Everything is fine  😊");
             }
@@ -50,7 +50,7 @@ class InteractButton extends HTMLElement {
     }
 
     connectedCallback() {
-        this.count = user.getCart()[this.itemId];
+        // this.count = user.getCart()[this.itemId];
         this.updateDisplay();
     }
 }
