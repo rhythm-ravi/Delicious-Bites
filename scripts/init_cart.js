@@ -13,6 +13,7 @@ function renderCart() {
                 readyCart(response);
             },
             error: function(xhr, status, error) {
+                alert("Unable to render cart at the moment. Please try later.");
                 console.log("Error occurred: " + status + ", " + error);
                 console.log(xhr.responseText); // Check the response from the server
             }

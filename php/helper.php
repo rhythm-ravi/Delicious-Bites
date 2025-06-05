@@ -14,5 +14,4 @@
     flush();
 
     $mysqli->close();       // close the connection after each exec
-    // return $response;
 ?>
