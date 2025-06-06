@@ -86,3 +86,26 @@ button {
 .user-card:hover .tooltip {
     display: block;
 }
+
+
+/* Interact styles (buttons) */
+.item-btn {
+    background-color: #971010;
+    color: white;
+    font-weight: bold;
+
+    padding: 10px 20px;
+    font-size: 16px;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+
+    margin: auto;
+}
+.item-btn:hover {
+    background-color: white;
+    color: #971010;
+    font-weight: bolder;
+    transition: 150ms ease;
+
+}

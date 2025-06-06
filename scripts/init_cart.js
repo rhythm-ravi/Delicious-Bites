@@ -29,10 +29,7 @@ function renderCart() {
 function readyCart(menu) {                  ///////////////////   NEED TO REVAMP this function
         console.log("halo");
         window.customElements.define('cart-entry', CartEntry);
-        // console.log(system);
-        // menu = system.getMenu();    
-        
-        cartBody = document.querySelector('.cart-table tbody');
+        window.customElements.define('item-interact', CartItemInteract);
 
         let price = 0;  let i=1;
 
@@ -42,16 +39,9 @@ function readyCart(menu) {                  ///////////////////   NEED TO REVAMP
             let item = menu[key];
             // if item available in menu
             if (menu[key] && menu[key].availability) {
-                entry = document.createElement('tr');
-                entry.innerHTML = `
-                 <td class="item-id">${i}</td>
-                 <td class="item-name">${item.name}</td>
-                 <td class="item-price">${item.price}</td>
-                 <td class="item-qty">${cart[key]}</td>
-                 <td>${item.price * cart[key]}</td>
-                `;                
+                entry = new CartEntry(key, item.price);             
                 price += item.price * cart[key];
-                cartBody.appendChild(entry);
+                document.querySelector(".cart").appendChild(entry);
                 i+=1;
             }
             else {
@@ -60,17 +50,17 @@ function readyCart(menu) {                  ///////////////////   NEED TO REVAMP
         }
 
 
-        const total = document.createElement("tr");
-        total.innerHTML =  `
-            <td colspan="4" class="summary">Total Amount Payable</td>
-            <td class="total-amount">${price ? price : "--"}</td>
-        `;
-        
-        cartBody.appendChild(total);
-        cartBody.appendChild(total);
+        // const total = document.createElement("tr");
+        // total.innerHTML =  `
+        //     <td colspan="4" class="summary">Total Amount Payable</td>
+        //     <td class="total-amount">${price ? price : "--"}</td>
+        // `;
 
-        const temp = new InteractButton(menu[0].id);
-        cartBody.appendChild(temp);
+        // cartBody.appendChild(total);
+        // cartBody.appendChild(total);
+
+        // const temp = new InteractButton(menu[0].id);
+        // cartBody.appendChild(temp);
 
 
 }

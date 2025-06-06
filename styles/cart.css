@@ -39,20 +39,18 @@ h1 {
 }
 
 /*  Cart table */
-.cart-table {
+.cart {
+    /* display: flex;
+    flex-direction: column; */
+    align-items: left;
+}
+.cart-entry {
     width: 100%;
-    border-collapse: collapse;
-    margin-top: 20px;
-}
+    display: flex;
+    flex-direction: row;
+    gap: 24px;
 
-.cart-table th, .cart-table td {
-    border: 1px solid #ddd;
-    padding: 8px;
-    text-align: left;
-}
-
-.cart-table th {
-    background-color: #971010;
+    margin: 24px 12px;
 }
 
 .summary {

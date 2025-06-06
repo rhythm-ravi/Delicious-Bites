@@ -32,6 +32,7 @@ function init_menu(records) {
 
     window.customElements.define('interact-btn', InteractButton);
     window.customElements.define('non-interact-btn', NonInteractButton);
+    window.customElements.define('item-interact', MenuItemInteract);
 
     const grid = document.querySelector("#menu .grid");
     const template = document.querySelector("#menu-entry");
@@ -58,12 +59,12 @@ function init_menu(records) {
         details.innerHTML = record.name + "<br>{$" + record.price + "}";
 
         let interactButton;
-        if (user.getUserId())
-            interactButton = new InteractButton(record.id);
-        else
-            interactButton = new NonInteractButton();
-        // console.log(record.id);
-        
+        // if (user.getUserId())
+        //     interactButton = new InteractButton(record.id);
+        // else
+        //     interactButton = new NonInteractButton();
+        interactButton = new MenuItemInteract(record.id);
+        console.log(interactButton);
         clone.querySelector(".menu-entry").appendChild(interactButton);
         grid.appendChild(clone);
     };
