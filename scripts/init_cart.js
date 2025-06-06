@@ -39,7 +39,7 @@ function readyCart(menu) {                  ///////////////////   NEED TO REVAMP
             let item = menu[key];
             // if item available in menu
             if (menu[key] && menu[key].availability) {
-                entry = new CartEntry(key, item.price);             
+                entry = new CartEntry(key, item.name, item.price);             
                 price += item.price * cart[key];
                 document.querySelector(".cart").appendChild(entry);
                 i+=1;

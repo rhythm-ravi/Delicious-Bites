@@ -106,9 +106,10 @@ class CartEntry extends HTMLElement {
 
     static serialNumber = 1;
 
-    constructor(itemId, price) {
+    constructor(itemId, name, price) {
         super();
         this.itemId = itemId;
+        this.name = name;
         this.price = price;
         this.interact = new CartItemInteract(itemId, this);
     }
@@ -126,6 +127,7 @@ class CartEntry extends HTMLElement {
         this.innerHTML = `
             <div class="cart-entry">
                 <!--<span style="text-align: centre">${CartEntry.serialNumber++}</span>-->
+                <span>${this.name}</span>
                 <span>${user.getCart()[this.itemId]}</span>
                 <span>${user.getCart()[this.itemId]*this.price}</span>
             </div>
