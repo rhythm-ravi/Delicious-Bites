@@ -119,70 +119,29 @@ class CartEntry extends HTMLElement {
     }
 
     render() {
-        if (!user.getCart()[this.itemId]) {       // qty set to zero
+        const qty = user.getCart()[this.itemId];
+        if (!qty) {       // qty set to zero
             // write some code to confirm user's choice to delete
             this.innerHTML = ``;
             return;
         }
         this.innerHTML = `
             <div class="cart-entry">
-                <!--<span style="text-align: centre">${CartEntry.serialNumber++}</span>-->
-                <span>${this.name}</span>
-                <span>${user.getCart()[this.itemId]}</span>
-                <span>${user.getCart()[this.itemId]*this.price}</span>
+                <img class="cart-thumb" src="../assets/img/menu/${this.itemId}-thumbnail.jpg" alt="${this.name}">
+                <span class="cart-item-name">${this.name}</span>
+                <div class="cart-item-meta">
+                    <span class="cart-item-price">$${this.price}</span>
+                    <span class="cart-item-qty">x${qty}</span>
+                    <span class="cart-item-total">$${(qty * this.price).toFixed(2)}</span>
+                </div>
+                <div class="cart-actions"></div>
             </div>
         `;
         if (CartEntry.serialNumber > Object.keys(user.getCart()).length)
             CartEntry.serialNumber = 1;
 
-        this.querySelector(".cart-entry").appendChild(this.interact);
+        this.querySelector(".cart-actions").appendChild(this.interact);
     }
-        // this.innerHTML = `
-        // <h1>hullo</h1>
-        //     <tr>
-        //         <td class="item-id">${this.item.id}</td>
-        //         <td class="item-name">${this.item.name}</td>
-        //         <td class="item-price">${this.item.price}</td>
-        //         <td class="item-qty">${this.qty}</td>
-        //         <td>${this.item.price * this.qty}</td>
-        //     </tr>
-        // `
-
-        // const tr = document.createElement("tr");
-
-        // const td1 = this.createTd(this.item.id, "item-id");
-        // const td2 = this.createTd(this.item.name, "item-name");
-        // const td3 = this.createTd(`$${this.item.price}`, "item-price");
-        // const td4 = this.createTd(this.qty, "item-qty");
-        // const td5 = this.createTd(`$${(this.qty * this.item.price).toFixed(2)}`, "");
-
-        // tr.appendChild(td1);
-        // tr.appendChild(td2);
-        // tr.appendChild(td3);
-        // tr.appendChild(td4);
-        // tr.appendChild(td5);
-
-        // // this.appendChild(tr);
-        // const tr = document.createElement("tr");
-        // const td1 = document.createElement("td");   td1.setAttribute("class", "item-id");
-        // td1.innerHTML = `${this.item.id}`;
-        // const td2 = document.createElement("td");   td1.setAttribute("class", "item-name");
-        // td2.innerHTML = `${this.item.name}`;
-        // const td3 = document.createElement("td");   td1.setAttribute("class", "item-price");
-        // td3.innerHTML = `${this.item.price}`;
-        // const td4 = document.createElement("td");   td1.setAttribute("class", "item-qty");
-        // td4.innerHTML = `${this.qty}`;
-        // const td5 = document.createElement("td");
-        // td5.innerHTML = `${this.qty * this.item.price}`;
-
-        // tr.appendChild(td1);
-        // tr.appendChild(td2);
-        // tr.appendChild(td3);
-        // tr.appendChild(td4);
-        // tr.appendChild(td5);
-
-        // this.appendChild(tr);  // Append the <tr> to the custom element itself
-    // }
 }   
 
 

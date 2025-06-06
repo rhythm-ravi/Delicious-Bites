@@ -39,19 +39,78 @@ h1 {
 }
 
 /*  Cart table */
-.cart {
-    /* display: flex;
-    flex-direction: column; */
-    align-items: left;
-}
-.cart-entry {
-    width: 100%;
+/* .cart {
     display: flex;
-    flex-direction: row;
-    gap: 24px;
-
-    margin: 24px 12px;
-}
+    flex-direction: column;
+    align-items: left;
+} */
+.cart-entry {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+    padding: 16px;
+    margin-bottom: 16px;
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    flex-wrap: wrap;
+  }
+  
+  .cart-thumb {
+    width: 64px;
+    height: 64px;
+    border-radius: 8px;
+    object-fit: cover;
+    background: #f0f0f0;
+    flex-shrink: 0;
+    transition: transform 0.3s cubic-bezier(.4,2,.6,1);
+  }
+  
+  .cart-item-name {
+    flex: 2 1 180px;
+    font-weight: 600;
+    font-size: 1.07em;
+    min-width: 120px;
+  }
+  
+  .cart-item-meta {
+    display: flex;
+    flex: 3 1 240px;
+    gap: 18px;
+    color: #444;
+    font-size: 0.97em;
+    justify-content: flex-start;
+    min-width: 210px;
+  }
+  .cart-item-price, .cart-item-qty, .cart-item-total {
+    display: inline-block;
+    min-width: 60px; /* adjust as needed */
+    text-align: right;
+  }
+  
+  .cart-actions {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  
+  /* need to review this and maybe make it work */
+  @media (max-width: 600px) {
+    /* .cart-entry { flex-direction: column; align-items: center; } */
+    /* .cart-item-meta { gap: 10px; min-height: 210px; min-width: none;}
+    .cart-item-name { min-height: 120px; min-width: none; }
+    .cart-item-price, .cart-item-qty, .cart-item-total { min-height: 60px; min-width: none; } */
+  }
+  .cart-entry:hover {
+    transform: scale(1.04);
+    box-shadow: 0 4px 20px rgba(0,0,0,0.16);
+    /* z-index: 0; */
+  }
+  .cart-thumb:hover {
+    transform: scale(1.18);
+    box-shadow: 0 4px 20px rgba(0,0,0,0.16);
+    z-index: 2;
+  }
 
 .summary {
     text-align: right;
