@@ -5,11 +5,14 @@ function renderMenu() {
         // console.log("halo");
         $.ajax({
             method: 'POST',
-            url: 'php/helper.php',
+            url: 'api/menu.php',
             dataType: 'JSON',
             success: function(response) {
                 console.log(response);
-                init_menu(response);
+                // Store the timestamp using the utility function
+                setMenuTimestamp(response.timestamp);
+                // Initialize menu with the items object
+                init_menu(response.items);
             },
             error: function(xhr, status, error) {
                 console.log("Error occurred: " + status + ", " + error);
