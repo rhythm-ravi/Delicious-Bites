@@ -78,3 +78,12 @@ function signOut() {        // signedIn -> out
     window.location.href = "home.html";
 }
 
+// Menu timestamp utility functions
+function setMenuTimestamp(ts) {
+    localStorage.setItem('menuTimestamp', ts);
+}
+
+function getMenuTimestamp() {
+    return localStorage.getItem('menuTimestamp');
+}
+
