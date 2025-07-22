@@ -4,14 +4,21 @@ h2 {
 }
 
 .login-box {
-    width: 300px;
+    /* width: 300px;
     position: absolute;
-    transform: translate(-50%, -50%);
+    transform: translate(-50%, -50%); */
+    max-width: 300px;
+    margin: 5vh auto;
+    padding: 20px;
+    background-color: #f9f9f9;
 }
 .signup-box {
-    width: 600px;
-    position: absolute;
-    transform: translate(-50%, -50%);
+    max-width: 600px;
+    margin: 5vh auto;
+    padding: 20px;
+    background-color: #f9f9f9;
+    /* position: absolute;
+    transform: translate(-50%, -50%); */
 }
 
 input[type="text"],
