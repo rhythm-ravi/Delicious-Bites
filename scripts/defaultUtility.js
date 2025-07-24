@@ -1,4 +1,47 @@
 
+const platform = {
+    setMenuTimestamp: function(ts) {
+        localStorage.setItem('menuTimestamp', ts);
+    },
+    getMenuTimestamp: function() {
+        return localStorage.getItem('menuTimestamp');
+    },
+
+    getMenu: async function() {        
+        const clientTimestamp = this.getMenuTimestamp();
+        let url = 'php/menu.php';
+        // url += '?timestamp=' + encodeURIComponent(clientTimestamp);     // Append client timestamp to the URL
+        if (clientTimestamp) {
+            url += '?timestamp=' + encodeURIComponent(clientTimestamp);     // Append client timestamp to the URL
+        }
+
+        fetch(url)
+            .then(response => response.json())
+            .then(data => {
+                if (!data.success) {        // Failed to fetch menu data ie couldn't connect to database
+                    console.error("Couldn't connect to db:", data.error);
+                    return;
+                }
+
+
+                this.setMenuTimestamp(data.timestamp);
+
+                if (data.unchanged) {
+                    // If menu unchanged, you may skip re-rendering if desired
+                    console.log("Menu unchanged, using cached version.");
+                    return;
+                }
+                // data.items contains the menu
+                localStorage.setItem('menu', data.items);  // Store menu in local storage
+                console.log("Menu fetched successfully:", JSON.stringify(data.items));      // DEBUG
+            })
+            .catch(error => {       // could not reach server
+                console.error("Error occurred (Couldn't connect to menu.php):", error);
+            });
+
+    }
+}
+
 //  just a convenience global const object,   allowing less wordy access to user session dets
 const user = {
     getUserName: function() {
@@ -42,6 +85,9 @@ const user = {
     }
 
 }
+
+
+
 
 // Flushes current cart state to server
 function closeWindow() {        

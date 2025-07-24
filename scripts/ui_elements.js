@@ -70,7 +70,7 @@ class MenuItemInteract extends ItemInteract {
                 if (minusButton)
                     minusButton.addEventListener('click', this.decrementCount.bind(this));
             } catch (error) {
-                console.log("Everything is fine  😊");
+                console.log("Event listeners could not be bound. Everything is fine  😊 (NOT)");
             }
         });
     }
