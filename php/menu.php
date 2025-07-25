@@ -1,5 +1,4 @@
 <?php
-include('db.php');
 
 header('Content-Type: application/json');
 
@@ -9,6 +8,8 @@ $response = [
 ];
 
 try {
+    include('db.php');
+    
     // Get client timestamp from request (GET or POST)
     $client_ts = $_REQUEST['timestamp'] ?? null;
 

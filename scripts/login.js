@@ -18,10 +18,6 @@ function handleLogin(event) {
         if (data.success) {                 // login successful
             localStorage.setItem('userId', data.userId);
             localStorage.setItem('userName', data.userName);
-            localStorage.setItem('items', JSON.stringify(data.items));
-            console.log(user.getCart());
-            user.removeCartItem(0);     // remove the placeholder value, since its job is done.
-            console.log(user.getCart());
 
             // console.log(data.items[2]);
             alert(`Welcome ${user.getUserName()}!`);
@@ -33,12 +29,11 @@ function handleLogin(event) {
             //             (since it is being unloaded)
             // `);
         } else {
-            window.location.href = "failure_login.html";
+            console.log(data);
+            console.error(data.error);
+            alert(data.error);
         }
-        // else {
-        //     alert('The whole php page failed???');
-        // }
     })
-    .catch(error => console.error('Some sort of error:', error));
+    .catch(error => console.error('Login API error', error));
 
 }

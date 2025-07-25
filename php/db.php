@@ -9,7 +9,7 @@
     $mysqli = new mysqli($host, $username, $password, $database);
 
     if ($mysqli->connect_error) {
-        die("Connection failed: " . $mysqli->connect_error);
+        throw new Exception("Database connection failed: " . $mysqli->connect_error);
     }
 
     // // Optionally, set the character set to UTF-8 to avoid encoding issues

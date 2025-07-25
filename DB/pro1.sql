@@ -3,6 +3,7 @@ use prodb;
 
 
 -- drop database prodb;
+-- consider on delete cascade for foreign keys esp for customers
 
 # User profile details
 CREATE TABLE customers (	# Customer records stored in this table
@@ -12,8 +13,9 @@ CREATE TABLE customers (	# Customer records stored in this table
     last_name VARCHAR(15),
     mobile VARCHAR(15) NOT NULL,		# varchar so that to maybe allow country codes?
     email_id VARCHAR(40) NOT NULL,
-    password_hash VARCHAR(255) NOT NULL,		# hashed password
+    password VARCHAR(255) NOT NULL,		# hashed password
     
+    CONSTRAINT chk_username CHECK ( username REGEXP '^[A-Za-z][a-zA-Z0-9_]{2,14}$' ),       # username must start with a letter, and consist of 3-15 chars
     CONSTRAINT chk_mobile CHECK ( mobile REGEXP '^[0-9]{5}[0-9]{5}$' ),
     CONSTRAINT chk_email CHECK ( email_id REGEXP '^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$' ),
     CONSTRAINT chk_password CHECK ( CHAR_LENGTH(password) >= 8 ),

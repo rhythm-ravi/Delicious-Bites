@@ -32,8 +32,8 @@ const platform = {
                     return;
                 }
                 // data.items contains the menu
-                localStorage.setItem('menu', data.items);  // Store menu in local storage
-                console.log("Menu fetched successfully:", JSON.stringify(data.items));      // DEBUG
+                localStorage.setItem('menu', JSON.stringify(data.items));  // Store menu in local storage
+                console.log("Menu fetched successfully:", data.items);      // DEBUG
             })
             .catch(error => {       // could not reach server
                 console.error("Error occurred (Couldn't connect to menu.php):", error);
@@ -50,9 +50,25 @@ const user = {
     getUserId: function() {
         return localStorage.getItem('userId');
     },
-    getCart: function() {
-        return JSON.parse(localStorage.getItem('items')) || {};     // return js obj from string stored in local storage
-        // return localStorage.getItem('items');
+    getCart: async function() {
+        fetch('php/cart_read.php', {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                return data.cart;  // Return the cart data
+            } else {
+                console.error("Error fetching cart:", data.error);
+                return {};  // Return an empty object if there's an error
+            }
+        })
+        .catch(error => {
+            console.error("Error occurred (Couldn't connect to cart_read.php):", error)
+        });
     },
     addQty: function(id, qty) {
         // id = toString(id);
