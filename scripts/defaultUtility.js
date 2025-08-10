@@ -15,7 +15,7 @@ const platform = {
             url += '?timestamp=' + encodeURIComponent(clientTimestamp);     // Append client timestamp to the URL
         }
 
-        fetch(url)
+        await fetch(url)
             .then(response => response.json())
             .then(data => {
                 if (!data.success) {        // Failed to fetch menu data ie couldn't connect to database
@@ -50,92 +50,135 @@ const user = {
     getUserId: function() {
         return localStorage.getItem('userId');
     },
-    getCart: async function() {
-        fetch('php/cart_read.php', {
-            method: 'GET',
+    getCart: function() {
+        return JSON.parse(localStorage.getItem('cart')) || {};
+    },
+    getCartTimestamp: function() {
+        return localStorage.getItem('cartTimestamp');
+    },
+    fetchCart: async function() {
+        await fetch('php/cart_read.php', {
+            method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
-            }
+            },
+            body: JSON.stringify({
+                client_timestamp: this.getCartTimestamp(),
+            })
         })
         .then(response => response.json())
         .then(data => {
             if (data.success) {
-                return data.cart;  // Return the cart data
+                if (!data.unchanged) {
+                    // If cart has changed, update local storage
+                    console.log("Cart fetched successfully:", data.cart);
+                    localStorage.setItem('cart', JSON.stringify(data.cart));
+                    localStorage.setItem('cartTimestamp', data.timestamp);
+                }
+                // else cart is the same as before, no need to update
             } else {
                 console.error("Error fetching cart:", data.error);
-                return {};  // Return an empty object if there's an error
+                // If server-side session expired
+                if (data.error === "Authentication required.") {
+                    alert("Session Expired. Please sign in again.");
+                    localStorage.clear();  // Clear local storage on authentication error
+                    window.location.href = "home.html";  // Redirect to home page
+                }
             }
         })
         .catch(error => {
             console.error("Error occurred (Couldn't connect to cart_read.php):", error)
         });
     },
-    addQty: function(id, qty) {
-        // id = toString(id);
-        let cart = this.getCart();
-
-        if (!cart[id]) cart[id] = 0;
-        cart[id] += qty;
-        if (cart[id]<=0) {
-            delete cart[id];
+    updateItem: async function(id, delQty) {
+        const cart = this.getCart();
+        let qty = ( cart[id] || 0 ) + delQty;  // Get current quantity or 0 if not present
+        if (qty < 0) {
+            qty = 0;  // Ensure quantity is not negative
         }
+        console.log(qty);
 
-        console.log(id);
-
-        localStorage.setItem("items", JSON.stringify(cart));
-        console.log(this.getCart());
-        return cart[id];
-    },
-    addCartItem: function(id, qty) {
-        // id = toString(id);
-        let cart = this.getCart();
-        cart[id] = qty;         // assuming id is a new id
-        localStorage.setItem("items", JSON.stringify(cart));
-    },
-    removeCartItem: function(id) {
-        // id = toString(id);
-        let cart = this.getCart();
-        delete cart[id];
-        localStorage.setItem("items", JSON.stringify(cart));
-        console.log(user.getCart());
-    }
-
-}
-
-
-
-
-// Flushes current cart state to server
-function closeWindow() {        
-    $(document).ready(function() {
-        if (!user.getUserId())      // If not signed in, do nothing
-            return;
-        const userData = {
-            'userId': user.getUserId(),  // Replace with actual user ID
-            'userCart': user.getCart()  // Replace with actual cart data
-        };
-
-        // console.log(user.getCart()); // Log the user data to ensure it's correct
-
-        $.ajax({
-            url: '../php/closer.php',
-            type: 'POST',
-            contentType: 'application/json',
-            data: JSON.stringify(userData),  // Convert the data to a JSON string
-
-            success: function(response) {
-              console.log('Response from PHP:', response);
+        await fetch ('php/cart_update.php', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
             },
-            error: function(xhr, status, error) {
-              console.error('Error:', error);
+            body: JSON.stringify({
+                userId: this.getUserId(),
+                itemId: id,
+                quantity: qty,
+                timestamp: this.getCartTimestamp()  // Send current cart timestamp
+            })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                console.log("Cart updated successfully:", data);
+
+                // Update local storage cart
+                let newCart = this.getCart();
+                newCart[id] = qty;
+                if (qty <= 0) {
+                    delete newCart[id];  // Remove item if quantity is zero
+                }
+                localStorage.setItem('cart', JSON.stringify(newCart));
+                localStorage.setItem('cartTimestamp', data.timestamp);  // Update cart timestamp
+            } else {
+                console.error("Error updating cart:", data.error);
+
+                // If server-side session expired
+                if (data.error === "Authentication required.") {
+                    alert("Session Expired. Please sign in again.");
+                    localStorage.clear();  // Clear local storage on authentication error
+                    window.location.href = "home.html";  // Redirect to home page
+                }
+                
+                if (data.error === "outdated_cart") {
+                    alert("Your cart is outdated. Please refresh the page to get the latest cart state.");
+                    location.reload();  // Reload the page to get the latest cart state
+                }
             }
-          });
-          
-    });
+        })
+        .catch(error => {
+            console.error("Error occurred (Couldn't connect to cart_update.php):", error);
+        });
+    }
 }
+
+
+
+
+// // Flushes current cart state to server
+// function closeWindow() {        
+//     $(document).ready(function() {
+//         if (!user.getUserId())      // If not signed in, do nothing
+//             return;
+//         const userData = {
+//             'userId': user.getUserId(),  // Replace with actual user ID
+//             'userCart': user.getCart()  // Replace with actual cart data
+//         };
+
+//         // console.log(user.getCart()); // Log the user data to ensure it's correct
+
+//         $.ajax({
+//             url: '../php/closer.php',
+//             type: 'POST',
+//             contentType: 'application/json',
+//             data: JSON.stringify(userData),  // Convert the data to a JSON string
+
+//             success: function(response) {
+//               console.log('Response from PHP:', response);
+//             },
+//             error: function(xhr, status, error) {
+//               console.error('Error:', error);
+//             }
+//           });
+          
+//     });
+// }
 
 function signOut() {        // signedIn -> out
-    closeWindow();
+    // closeWindow();
     localStorage.clear();
     window.location.href = "home.html";
 }

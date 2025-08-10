@@ -8,23 +8,23 @@ class ItemInteract extends HTMLElement {
         this.itemId = itemId;
         this.container = container;
     }
-    incrementCount() {
+    async incrementCount() {
         if (!user.getUserId()) {
             alert("Sign In to get started!");
             return;
         }
-        user.addQty(this.itemId, 1);
+        await user.updateItem(this.itemId, 1);
         if (!this.container)
             this.render();
         else
             this.container.render();
     }
-    decrementCount() {
+    async decrementCount() {
         if (!user.getUserId()) {
             alert("Sign In to get started!");
             return;
         }
-        user.addQty(this.itemId, -1);
+        await user.updateItem(this.itemId, -1);
         if (!this.container)
             this.render();
         else
@@ -45,8 +45,7 @@ class MenuItemInteract extends ItemInteract {
         this.itemId = itemId;
     }
     render() {
-
-        if (user.getCart()[this.itemId]) {   // +ve int
+        if (user.getCart()[this.itemId]) { // +ve int
             this.innerHTML = `
                 <span class="alter-cnt">
                     <span class="item-qty">${user.getCart()[this.itemId]}</span>

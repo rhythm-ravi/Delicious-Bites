@@ -111,20 +111,16 @@ CREATE TABLE cart_entries(
 );
 
 DELIMITER //
-CREATE TRIGGER create_cart_row_before_insert
-BEFORE INSERT ON cart_entries
+-- CART CREATION TRIGGER
+CREATE TRIGGER create_cart_row_after_insert
+AFTER INSERT ON customers
 FOR EACH ROW
 BEGIN
-    IF NOT EXISTS (SELECT 1 FROM carts WHERE cust_id = NEW.cust_id) THEN
-        INSERT INTO carts (cust_id) VALUES (NEW.cust_id);
-    END IF;
+    INSERT INTO carts (cust_id) VALUES (NEW.cust_id);
 END;
 //
 
-DELIMITER ;
 -- MENU TIMESTAMP TRIGGERS
-DELIMITER //
-
 CREATE TRIGGER items_after_insert
 AFTER INSERT ON items
 FOR EACH ROW

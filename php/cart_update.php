@@ -19,11 +19,11 @@ try {
     $data = json_decode(file_get_contents('php://input'), true);
     if (!$data) throw new Exception("Invalid input. JSON expected.");
 
-    $client_timestamp = $data['timestamp'] ?? null;
-    $item_id = $data['item_id'] ?? null;
-    $qty = $data['qty'] ?? null;
+    $client_timestamp = $data['timestamp'];
+    $item_id = $data['itemId'] ?? null;
+    $qty = $data['quantity'] ?? null;
 
-    if (!is_numeric($item_id) || !is_numeric($qty) || $client_timestamp === null) {
+    if (!is_numeric($item_id) || !is_numeric($qty)) {
         throw new Exception("Missing or invalid parameters.");
     }
 
@@ -109,11 +109,11 @@ try {
     http_response_code(500);
     $response['error'] = $e->getMessage();
 } finally {
-    if (isset($cart_stmt) && $cart_stmt instanceof mysqli_stmt) $cart_stmt->close();
-    if (isset($cart_stmt2) && $cart_stmt2 instanceof mysqli_stmt) $cart_stmt2->close();
-    if (isset($insert_stmt) && $insert_stmt instanceof mysqli_stmt) $insert_stmt->close();
-    if (isset($update_stmt) && $update_stmt instanceof mysqli_stmt) $update_stmt->close();
-    if (isset($delete_stmt) && $delete_stmt instanceof mysqli_stmt) $delete_stmt->close();
+    // if (isset($cart_stmt) && $cart_stmt instanceof mysqli_stmt) $cart_stmt->close();
+    // if (isset($cart_stmt2) && $cart_stmt2 instanceof mysqli_stmt) $cart_stmt2->close();
+    // if (isset($insert_stmt) && $insert_stmt instanceof mysqli_stmt) $insert_stmt->close();
+    // if (isset($update_stmt) && $update_stmt instanceof mysqli_stmt) $update_stmt->close();
+    // if (isset($delete_stmt) && $delete_stmt instanceof mysqli_stmt) $delete_stmt->close();
     if (isset($mysqli) && $mysqli instanceof mysqli) $mysqli->close();
     echo json_encode($response);
     exit;

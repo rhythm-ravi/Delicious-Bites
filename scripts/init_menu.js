@@ -2,6 +2,11 @@
 // import "http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js";
 
 async function renderMenu() {
+    if (user.getUserId()) {         // fetch cart before rendering menu
+        console.log("Fetching cart");   
+        await user.fetchCart();  // Fetches cart data from server and stores it in local storage
+    }
+    
     await platform.getMenu();  // Fetches menu data from server and stores it in local storage
     console.log(localStorage.getItem('menu'));  // DEBUG: Check if menu is stored in local storage
     const menu = JSON.parse(localStorage.getItem('menu'));  // Retrieve menu from local storage
