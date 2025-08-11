@@ -2,7 +2,7 @@ CREATE DATABASE prodb;
 use prodb;
 
 
--- drop database prodb;
+drop database prodb;
 -- consider on delete cascade for foreign keys esp for customers
 
 # User profile details
@@ -95,6 +95,7 @@ CREATE TABLE items (	# Items available at the restaurant
 -- USER CART VERSIONING
 CREATE TABLE carts (
     cust_id INT,
+    prev_timestamp TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,        # specifically to prevent unpredictable behavior in race conditions
     last_updated TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     
     PRIMARY KEY (cust_id),
@@ -116,7 +117,7 @@ CREATE TRIGGER create_cart_row_after_insert
 AFTER INSERT ON customers
 FOR EACH ROW
 BEGIN
-    INSERT INTO carts (cust_id) VALUES (NEW.cust_id);
+    INSERT INTO carts (cust_id) VALUES (NEW.id);
 END;
 //
 
@@ -150,7 +151,10 @@ CREATE TRIGGER cart_entries_after_insert
 AFTER INSERT ON cart_entries
 FOR EACH ROW
 BEGIN
-    UPDATE carts SET last_updated = CURRENT_TIMESTAMP WHERE cust_id = NEW.cust_id;
+    UPDATE carts 
+    SET prev_timestamp = last_updated, 
+        last_updated = CURRENT_TIMESTAMP 
+    WHERE cust_id = NEW.cust_id;
 END;
 //
 
@@ -158,7 +162,10 @@ CREATE TRIGGER cart_entries_after_update
 AFTER UPDATE ON cart_entries
 FOR EACH ROW
 BEGIN
-    UPDATE carts SET last_updated = CURRENT_TIMESTAMP WHERE cust_id = NEW.cust_id;
+    UPDATE carts 
+    SET prev_timestamp = last_updated, 
+        last_updated = CURRENT_TIMESTAMP 
+    WHERE cust_id = NEW.cust_id;
 END;
 //
 
@@ -166,7 +173,10 @@ CREATE TRIGGER cart_entries_after_delete
 AFTER DELETE ON cart_entries
 FOR EACH ROW
 BEGIN
-    UPDATE carts SET last_updated = CURRENT_TIMESTAMP WHERE cust_id = OLD.cust_id;
+    UPDATE carts 
+    SET prev_timestamp = last_updated, 
+        last_updated = CURRENT_TIMESTAMP 
+    WHERE cust_id = OLD.cust_id;
 END;
 //
 

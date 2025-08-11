@@ -91,15 +91,20 @@ try {
     }
 
     // Fetch new timestamp
-    $cart_stmt2 = $mysqli->prepare("SELECT last_updated FROM carts WHERE cust_id = ?");
-    if (!$cart_stmt2) throw new Exception("Failed to prepare cart timestamp fetch query: " . $mysqli->error);
-    $cart_stmt2->bind_param("i", $cust_id);
-    if (!$cart_stmt2->execute()) throw new Exception("Failed to execute cart timestamp fetch query: " . $cart_stmt2->error);
-    $cart_result2 = $cart_stmt2->get_result();
-    $new_timestamp = null;
-    if ($row = $cart_result2->fetch_assoc()) {
-        $new_timestamp = $row['last_updated'];
-    }
+    $new_timestamp = null; // null by default
+    $cart_stmt2 = $mysqli->prepare("SELECT last_updated, prev_timestamp FROM carts WHERE cust_id = ?");
+    if ($cart_stmt2) {
+        $cart_stmt2->bind_param("i", $cust_id);
+        if ($cart_stmt2->execute()) {
+            $cart_result2 = $cart_stmt2->get_result();
+            if ($row = $cart_result2->fetch_assoc()) {
+
+                if ($row['prev_timestamp'] === $client_timestamp) {       // to prevent race condition issues
+                    $new_timestamp = $row['last_updated'];
+                }
+            }
+        }
+    } 
     $cart_stmt2->close();
 
     $response['success'] = true;

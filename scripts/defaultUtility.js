@@ -112,9 +112,15 @@ const user = {
         })
         .then(response => response.json())
         .then(data => {
-            if (data.success) {
+            if (data.success) {     // update pushed to server
                 console.log("Cart updated successfully:", data);
-
+                if (!data.timestamp) {     // couldn't get new timestamp after update or could read that but cart changed by more than just this update
+                                            // ie we don't have current timestamp or client may be outdated
+                                            // so we sync cart and also get current server timestamp
+                    console.log("Timestamp: " + data.timestamp);    // DEBUG
+                    location.reload();  // Reload the page to get the latest cart state and display it
+                    return;
+                }
                 // Update local storage cart
                 let newCart = this.getCart();
                 newCart[id] = qty;

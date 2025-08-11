@@ -80,5 +80,5 @@ try {
     if (isset($mysqli) && $mysqli instanceof mysqli) $mysqli->close();
     echo json_encode($response);
     exit;
-}
+}   // Read should lead to valid states even duriing situations where simultaneous writes are happening
 ?>
