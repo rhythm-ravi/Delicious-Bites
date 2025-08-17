@@ -29,20 +29,21 @@
     <div class="container signup-box"> 
         <h2>Sign Up</h2>
         <form action="javascript:void(0)" method="POST" onSubmit="handleSignUp(event)">
-            <input type="text" id="first-name" name="first-name" placeholder="First Name" required>
-            <input type="text" id="last-name" name="last-name" placeholder="Last Name">
-            <input type="text" id="username" name="username" placeholder="username" required>
+            <!-- maxlengths matching to those in db -->
+            <input type="text" id="first-name" name="first-name" placeholder="First Name*" maxlength="15" required>
+            <input type="text" id="last-name" name="last-name" placeholder="Last Name" maxlength="15">
+            <input type="text" id="username" name="username" placeholder="username*" maxlength="15" required>
 
             <!-- May need to change type for mobile number, since rn not really optimal -->
-            <input type="text" id="mobile-number" name="mobile-number" placeholder="Mobile Number" required>
-            <input type="email" id="email" name="email" placeholder="Email id" required>
-            
-            <span id="strength-error" class="verify-error">Password not Strong!</span>
-            <input type="password" id="password" name="password" placeholder="Password" maxlength="30" required>
-            <span id="match-error" class="verify-error">Make sure the passwords match!</span>
-            <input type="password" id="confirm-password" name="confirm-password" placeholder="Confirm Password" required>
+            <input type="text" id="mobile-number" name="mobile" placeholder="Mobile Number*" minLength="10" maxlength="15" pattern="\+?\d{10,15}" required>     <!-- Just a general mobile regexp-->
+            <input type="email" id="email" name="email" placeholder="Email id*" maxlength="40" required>
 
-            <input type="text" id="address" name="address" placeholder="Address" required>
+            <span id="strength-error" class="verify-error">Password not Strong!</span>
+            <input type="password" id="password" name="password" placeholder="Password*" minLength="10" maxlength="30" required>
+            <span id="match-error" class="verify-error">Make sure the passwords match!</span>
+            <input type="password" id="confirm-password" name="confirm-password" placeholder="Confirm Password*" required>
+
+            <!-- <input type="text" id="address" name="address" placeholder="Address" required> -->
 
             <input type="submit" id="submit-button" value="Create Account">
         </form>

@@ -43,7 +43,7 @@ INSERT INTO states (state_name) VALUES
 CREATE TABLE addresses (
 	id INT PRIMARY KEY AUTO_INCREMENT, 
 	cust_id INT NOT NULL,
-    name VARCHAR(25),
+    name VARCHAR(25),           # name assigned by user to said address
     address1 VARCHAR(100) NOT NULL,		# line 1 (flat, house number, ...)
     address2 VARCHAR(100),		# line 2 ( area, street, sector, ...)
     landmark VARCHAR(25),		

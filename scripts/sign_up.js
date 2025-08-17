@@ -56,11 +56,26 @@ function handleSignUp(event) {
     .then(response => response.json())
     .then(data => {
         // console.log(data);
-        displayStatus(data);
+        // displayStatus(data);
+        if (data.success) {
+            alert("Sign Up successful! Account Created!\n Login to continue");
+            window.location.href = "login.html";  // Redirect to login page
+        } else {
+            if (data.errors.at(-1).startsWith("Duplicate field:")) {    // check if only errors are the dup ones
+
+                for (let i=0; i<data.errors.length; i++) {
+                    data.errors[i] = data.errors[i].substring("Duplicate field: ".length);
+                }
+                let errorMessage = data.errors.join('\n');
+                alert(errorMessage);
+            } else {        // we have some other error,  which should tbe displayed even if any dup errors
+                alert(data.errors.at(-1));
+            }
+        }
     })
     .catch(error => {
-        alert('Some sort of error:', error);
-        console.error('Some sort of error:', error);
+        console.error('Could not connect to server: ', error);  
+        // Error in connecting to server or maybe error in server script's catch / finally block (obv not a real concern)
     });
 }
 
@@ -119,23 +134,24 @@ function matchPasswords() {
 }
 // ABCDef8@
 
-function displayStatus(response) {
-    const u = response.validName;
-    const m = response.validMobile;
-    const e = response.validEmail;
-    const loginSuccess = response.success;
-    console.log(u, m, e);
 
-    let displayString;
-    if (loginSuccess) {
-        displayString = "Sign Up successful! Account Created!\n Login to continue";
-    } else {
-        const connectError = u && m && e;
-        if (connectError) {
-            displayString = "Unable to connect with server. Please try later.";
-        } else {
-            displayString = `${!u ? 'Username already in use.\n' : ''}${!m ? 'Mobile number already in use.\n' : ''}${!e ? 'Email already in use.\n' : ''}Please try again.`;
-        }
-    }
-    alert(displayString);
-}
+// function displayStatus(response) {
+//     const u = response.validName;
+//     const m = response.validMobile;
+//     const e = response.validEmail;
+//     const loginSuccess = response.success;
+//     console.log(u, m, e);
+
+//     let displayString;
+//     if (loginSuccess) {
+//         displayString = "Sign Up successful! Account Created!\n Login to continue";
+//     } else {
+//         const connectError = u && m && e;
+//         if (connectError) {
+//             displayString = "Unable to connect with server. Please try later.";
+//         } else {
+//             displayString = `${!u ? 'Username already in use.\n' : ''}${!m ? 'Mobile number already in use.\n' : ''}${!e ? 'Email already in use.\n' : ''}Please try again.`;
+//         }
+//     }
+//     alert(displayString);
+// }

@@ -1,94 +1,92 @@
 <?php
+session_start();
+header('Content-Type: application/json');
 
-    session_start();
-    include('db.php');
+$response = [
+    "success" => false,
+    "errors" => []
+];
 
-    // $response = array(
-    //     "success" => false,
-    //     "validMobile" => true,
-    //     "validName" => true,
-    //     "vaildEmail" => true,
-    // );
-
-    // // echo "Hola";
-    // // echo json_encode($response);     //DEBUG
-
-    // echo $_SERVER["REQUEST_METHOD"];
-
-    if ($_SERVER["REQUEST_METHOD"] == "POST") {
-
-        $mobile = $_POST['mobile-number'];
-        $username = $_POST['username'];
-        $email = $_POST['email'];
-
-        $first_name = $_POST['first-name'];
-        $last_name = $_POST['last-name'];
-        $address = $_POST['address'];
-        $password = $_POST['password'];
-
-
-        $response = array(
-            "success" => false,
-            "validMobile" => true,
-            "validName" => true,
-            "validEmail" => true,
-        );
-
-        $accountCreatable = true;
-        
-        $query = "SELECT mobile, username, email_id FROM customers WHERE mobile = ? OR username = ? OR email_id = ?";
-        if ($stmt = $mysqli->prepare($query)) {
-            $stmt->bind_param('sss', $mobile, $username, $email);
-            $stmt->execute();
-            $stmt->store_result();
-
-            // if ($stmt->num_rows > 0) {
-                $stmt->bind_result($db_mobile, $db_username, $db_email);
-                while ($stmt->fetch()) {
-                    if ($mobile == $db_mobile) {
-                        $response['validMobile'] = false;
-                        $accountCreatable = false;
-                    }
-                    if ($username == $db_username) {   
-                        $response['validName'] = false;
-                        $accountCreatable = false;
-                    };
-                    if ($email == $db_email) {
-                        $response['validEmail'] = false;
-                        $accountCreatable = false;
-                    }
-                }
-        } else {
-            echo json_encode($response);
-            flush();
-            exit();
-        }
-
-        // One or more field values already in use
-        if ($accountCreatable == false) {
-            echo json_encode($response);
-            flush();
-            exit();
-        }
-
-        // Query to create account
-        $query = "INSERT INTO customers (username, first_name, last_name, mobile, email_id, password, address) VALUES (?, ?, ?, ?, ?, ?, ?)";
-
-        // success = false while others true means database issue encountered
-        if ($stmt = $mysqli->prepare($query)) {
-            $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
-            $stmt->bind_param('sssssss', $username, $first_name, $last_name, $mobile, $email, $hashedPassword, $address);
-                
-            if ($stmt->execute()) {
-                $response['success'] = true;
-            }
-            $stmt->close();
-        }
-
-        echo json_encode($response);
-        flush();
+try {
+    // ONLY allow POST
+    if ($_SERVER["REQUEST_METHOD"] !== "POST") {
+        http_response_code(405);
+        throw new Exception("Only POST requests are allowed.");
     }
 
-    $mysqli->close();
+    include('db.php');
 
+    // Extract and validate user input
+    $username = $_POST['username'] ?? null;
+    $first_name = $_POST['first-name'] ?? null;
+    $last_name = $_POST['last-name'] ?? null;
+    $mobile = $_POST['mobile'] ?? null;
+    $email_id = $_POST['email'] ?? null;
+    $password = $_POST['password'] ?? null;
+
+    if (!$username || !$first_name || !$mobile || !$email_id || !$password) {
+        throw new Exception("Missing required fields.");
+    }
+
+    // Input formats already validated client-side, and also at db via constraints
+    // prepared statements protect us from sql injection
+    // however, no server side validation may open us to certain logic abuse attacks (maybe)
+    // also obv our db may be vulnerable to DoS / resource exhaustion if attacker tries to send large field vals,  but even server-side validation simply shifts load from db to server
+    // so may need to include server-side validation just for good measure maybe
+
+    // Check for duplicate entries
+    $query = "SELECT mobile, username, email_id FROM customers WHERE mobile = ? OR username = ? OR email_id = ?";
+    $stmt = $mysqli->prepare($query);       
+    $stmt->bind_param("sss", $mobile, $username, $email_id);
+    $stmt->execute();
+    $stmt->store_result();
+
+    if ($stmt->num_rows > 0) {
+        $stmt->bind_result($db_mobile, $db_username, $db_email);
+        while ($stmt->fetch()) {
+            if ($mobile === $db_mobile) {
+                $response['errors'][] = "Duplicate field: Mobile number is already registered.";
+            }
+            if (strtolower($username) === strtolower($db_username)) {       // username and email should be case-insensitive
+                $response['errors'][] = "Duplicate field: Username is already taken.";
+            }
+            if (strtolower($email_id) === strtolower($db_email)) {
+                $response['errors'][] = "Duplicate field: Email address is already registered.";
+            }
+        }
+    }
+    // $stmt->close();
+
+    // If there are duplicate errors, return them
+    if (!empty($response['errors'])) {
+        echo json_encode($response);
+        exit();
+    }
+
+    // Hash the password
+    $hashed_password = password_hash($password, PASSWORD_BCRYPT);
+
+    // Insert new user into the database
+    $insert_query = "INSERT INTO customers (username, first_name, last_name, mobile, email_id, password) VALUES (?, ?, ?, ?, ?, ?)";
+    if ($stmt = $mysqli->prepare($insert_query)) {
+        $stmt->bind_param("ssssss", $username, $first_name, $last_name, $mobile, $email_id, $hashed_password);
+        if ($stmt->execute()) {
+            // If insertion is successful
+            $response['success'] = true;
+            $response['message'] = "User registered successfully.";
+        } else {
+            throw new Exception("Failed to execute query: " . $stmt->error);
+        }
+        // $stmt->close();
+    } else {
+        throw new Exception("Failed to prepare insert query: " . $mysqli->error);
+    }
+} catch (Exception $e) {
+    $response['errors'][] = $e->getMessage();
+} finally {
+    if (isset($stmt) && $stmt instanceof mysqli_stmt) $stmt->close();
+    if (isset($mysqli) && $mysqli instanceof mysqli) $mysqli->close();
+    echo json_encode($response);
+    exit();
+}  
 ?>
