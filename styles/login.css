@@ -4,9 +4,9 @@ h2 {
 }
 
 .login-box {
-    /* width: 300px;
-    position: absolute;
-    transform: translate(-50%, -50%); */
+    /* width: 300px; */
+    /* position: absolute; */
+    /* transform: translate(-50%, -50%); */
     max-width: 300px;
     margin: 5vh auto;
     padding: 20px;
@@ -47,7 +47,26 @@ input[type="submit"]:hover {
 
 
 /* Verify errors */
+input.invalid {
+    border: 2px solid #e74c3c;
+    box-shadow: 0 0 5px #e74c3c;
+}
+/* input.valid {
+    border: 2px solid #2ecc71;
+    box-shadow: 0 0 5px #2ecc71;
+} */
 .verify-error {
+    display: none;
+    color: #e74c3c;
+    font-size: 0.9em;
+    margin-top: 2px;
+    transition: opacity 0.2s;
+}
+input:disabled {
+    background: #eee;
+    cursor: not-allowed;
+}
+/* .verify-error {
     color: red;
     margin: 8px 0;
     border: none;
@@ -57,4 +76,4 @@ input[type="submit"]:hover {
 }
 #match-error {
     display: none;
-}
+} */

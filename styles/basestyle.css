@@ -12,7 +12,8 @@ body {
 header {
     background-color: #7f0c0c;
     color: #fff;
-    padding: 10px;
+    margin: 0 0 5vh 0;
+    padding: 10px 0 0 0;
     text-align: center;
     z-index: 3;
 }
@@ -36,6 +37,7 @@ nav a:hover {
 footer {
     background-color: #7f0c0c;
     color: #fff;
+    margin: 5vh 0 0 0;
     padding: 10px;
     text-align: center;
     position: fixed;
@@ -56,19 +58,9 @@ button {
     border-radius: 8px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 
-    top: 50%;   left: 50%;
-    /*  */
-    /* width: 300px;
-    position: absolute;
-    transform: translate(-50%, -50%); */
+    /* top: 50%;   left: 50%; */
+}
 
-    /* margin: 150px auto; */
-}
-.login-box {
-    width: 300px;
-    position: absolute;
-    transform: translate(-50%, -50%);
-}
 
 
 /* Hover over user name */

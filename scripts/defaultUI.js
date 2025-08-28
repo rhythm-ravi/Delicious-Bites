@@ -5,6 +5,7 @@ function placeBase() {      // places reusable base components for all html page
     header_footer.innerHTML = `
         <header>
             <h1>Delicious Bites🍔</h1>
+            <div id="navbar"></div>
         </header>
 
         <footer>

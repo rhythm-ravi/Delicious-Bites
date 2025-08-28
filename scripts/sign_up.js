@@ -1,7 +1,201 @@
+// Error state for each field.
 let errors = {
+    firstNameError: true,
+    lastNameError: false, // No check, so always false
+    usernameError: true,
+    mobileError: true,
+    emailError: true,
     strengthError: true,
-    matchError: true,
+    matchError: false
 };
+
+window.addEventListener('DOMContentLoaded', addListeners);
+
+function addListeners() {
+    document.getElementById("first-name").addEventListener('input', validateFirstName);
+    document.getElementById("last-name").addEventListener('input', validateLastName);
+    document.getElementById("username").addEventListener('input', validateUsername);
+    document.getElementById("mobile-number").addEventListener('input', validateMobile);
+    document.getElementById("email").addEventListener('input', validateEmail);
+
+    let password = document.getElementById("password");
+    let confirmPassword = document.getElementById("confirm-password");
+    password.addEventListener('input', validatePasswordStrength);
+    password.addEventListener('input', matchPasswords);
+    confirmPassword.addEventListener('input', matchPasswords);
+
+    // Check validity on every field change
+    for (let id of ["first-name","last-name","username","mobile-number","email","password","confirm-password"]) {
+        document.getElementById(id).addEventListener('input', checkFormValidity);
+    }
+}
+
+function validateFirstName() {
+    const input = document.getElementById("first-name");
+    const error = document.getElementById("first-name-error");
+    if (input.value.trim() === "") {        // Only check if name empty or not
+        errors.firstNameError = true;
+        input.classList.remove("valid");
+        if (input.value != "")  {
+            error.textContent = "First name cannot be empty.";
+            error.style.display = "inline";
+            input.classList.add("invalid");
+        } else {    // else empty input, so no visual error
+            error.style.display = "none";
+            input.classList.remove("invalid");
+        }
+    } else {
+        errors.firstNameError = false;
+        error.style.display = "none";
+        input.classList.remove("invalid");
+        input.classList.add("valid");
+        // input.value = input.value.trim();  // Trim whitespace
+    }
+}
+
+// Last name is optional, allow anything, so always valid
+function validateLastName() {
+    // const input = document.getElementById("last-name");
+    // const error = document.getElementById("last-name-error");
+    // error.style.display = "none";
+    // input.classList.remove("invalid");
+    // input.classList.add("valid");
+    // errors.lastNameError = false;
+}
+
+function validateUsername() {
+    const input = document.getElementById("username");
+    const error = document.getElementById("username-error");
+    const re = /^[A-Za-z][a-zA-Z0-9_]{2,14}$/;
+    if (re.test(input.value)) {
+        errors.usernameError = false;
+        error.style.display = "none";
+        input.classList.remove("invalid");
+        input.classList.add("valid");
+    } else {
+        errors.usernameError = true;
+        input.classList.remove("valid");
+        if (input.value != "") {    // Only show error if input is not empty
+            error.textContent = "Username must start with a letter, be 3-15 chars, and contain no special characters except _";
+            error.style.display = "inline";
+            input.classList.add("invalid");
+        } else {    // Empty input, so no visual error
+            error.style.display = "none";
+            input.classList.remove("invalid");}
+    }
+}
+
+function validateMobile() {
+    const input = document.getElementById("mobile-number");
+    const error = document.getElementById("mobile-error");
+    const re = /^[0-9]{10}$/;
+    if (re.test(input.value)) {
+        errors.mobileError = false;
+        error.style.display = "none";
+        input.classList.remove("invalid");
+        input.classList.add("valid");
+    } else {
+        errors.mobileError = true;
+        input.classList.remove("valid");
+        if (input.value != "") {    // Only show error if input is not empty
+            error.textContent = "Mobile number must be exactly 10 digits.";
+            error.style.display = "inline";
+            input.classList.add("invalid");
+        } else {    // Empty input, so no visual error
+            error.style.display = "none";  
+            input.classList.remove("invalid");
+        }
+    }
+}
+
+function validateEmail() {
+    const input = document.getElementById("email");
+    const error = document.getElementById("email-error");
+    const re = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+    if (re.test(input.value)) {
+        errors.emailError = false;
+        error.style.display = "none";
+        input.classList.remove("invalid");
+        input.classList.add("valid");
+    } else {
+        errors.emailError = true;
+        input.classList.remove("valid");
+        if (input.value != "") {    // Only show error if input is not empty
+            error.textContent = "Invalid email address.";
+            error.style.display = "inline";
+            input.classList.add("invalid");
+        } else {    // Empty input, so no visual error
+            error.style.display = "none";  
+            input.classList.remove("invalid");
+        }
+    }
+}
+
+// Password strength
+function validatePasswordStrength() {
+    const strongPasswordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()]).{8,}$/;
+    const input = document.getElementById("password");
+    const error = document.getElementById("strength-error");
+
+    const password = input.value;
+
+    if ( strongPasswordRegex.test(password) ) {
+        errors.strengthError = false;
+        error.style.display = "none";
+        input.classList.remove("invalid");
+        input.classList.add("valid");
+    } else {
+        errors.strengthError = true;
+        input.classList.remove("valid");
+        if (password != "") {    // Only show error if input is not empty
+            error.textContent = "Password must be at least 8 characters long, contain uppercase, lowercase, number, and special character.";
+            error.style.display = "inline";
+            input.classList.add("invalid");
+        } else {    // else empty input, so no visual error
+            error.style.display = "none";
+            input.classList.remove("invalid");
+        }
+    }
+
+}
+
+// Password match (already implemented)
+function matchPasswords() {
+
+    const passwordEle = document.getElementById("password");
+    const confirmPasswordEle = document.getElementById("confirm-password");
+    const error = document.getElementById("match-error");
+    if ( passwordEle.value === confirmPasswordEle.value ) {
+        errors.matchError = false;
+        error.style.display = "none";
+        confirmPasswordEle.classList.remove("invalid");
+        if ( !errors.strengthError ) {  // Only green if password strong too
+            confirmPasswordEle.classList.add("valid");
+        } else {
+            confirmPasswordEle.classList.remove("valid");
+        }
+    } else {
+        errors.matchError = true;
+        confirmPasswordEle.classList.remove("valid");
+        if (confirmPasswordEle.value != "") {    // Only show error if input is not empty
+            error.textContent = "Passwords do not match.";
+            error.style.display = "inline";
+            confirmPasswordEle.classList.add("invalid");
+        } else {    // else empty input, so no visual error
+            error.style.display = "none";
+            confirmPasswordEle.classList.remove("invalid");
+        }
+    }
+
+    // console.log(confirmPasswordEle.classList);
+}
+
+// Disable submit if any error
+function checkFormValidity() {
+    const submitButton = document.getElementById("submit-button");
+    const allValid = Object.values(errors).every(val => val === false);
+    submitButton.disabled = !allValid;
+}
 
 
 function handleSignUp(event) {
@@ -29,23 +223,7 @@ function handleSignUp(event) {
             // submitButton.style.color = "red";
         }
     }
-    // errors.forEach( (error) => {
-    //     if (error) {
-    //         const submitButton = document.getElementById("submit-button");
-    //         const errorAnimation = [
-    //             { color: "red"},
-    //             // { color: "green"},
-    //         ];
-    //         const animationTiming = {
-    //             duration: 3000,
-    //             iterations: 3,
-    //         };
-    //         submitButton.animate(errorAnimation, animationTiming);
-    //         console.log("Password error");
-    //         return;
-    //         // submitButton.style.color = "red";
-    //     }
-    // });
+
     const form = event.target;
     const formData = new FormData(form);
 
@@ -79,59 +257,7 @@ function handleSignUp(event) {
     });
 }
 
-function addListeners() {
-    let username = document.getElementById("username");
-    let mobile = document.getElementById("mobile-number");
-    let email = document.getElementById("email-id");
 
-
-    let password = document.getElementById("password");
-    let confirmPassword = document.getElementById("confirm-password");
-    password.addEventListener( 'input', function()  {
-        pwdStrength(password.value);
-    });
-    password.addEventListener( 'input', matchPasswords);
-    confirmPassword.addEventListener( 'input', matchPasswords );
-
-
-}
-
-function pwdStrength(password) {
-    // let password = pass.value;
-    const strongPasswordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()]).{8,}$/;
-
-    const strengthError = document.getElementById("strength-error");
-    if ( strongPasswordRegex.test(password) || password=="") {
-        strengthError.style.display = "none";
-        console.log("Adequate password");
-        if (password!="")
-            errors.strengthError = false;
-        else
-            error.strengthError = true;
-    } else {
-        strengthError.style.display = "inline";
-        console.log("Fuck You!");
-        errors.strengthError = true;
-    }
-
-}
-function matchPasswords() {
-    const password = document.getElementById("password").value;
-    const confirmPassword = document.getElementById("confirm-password").value;
-    const matchError = document.getElementById("match-error");
-    if (password==confirmPassword || confirmPassword=="") {
-        matchError.style.display = "none";
-        console.log("samey");
-        if (confirmPassword!="")
-            errors.matchError = false;
-        else
-            errors.matchError = true;
-    } else {
-        matchError.style.display = "inline";
-        console.log("different");
-        errors.matchError = true;
-    }
-}
 // ABCDef8@
 
 
@@ -154,4 +280,21 @@ function matchPasswords() {
 //         }
 //     }
 //     alert(displayString);
+// }
+
+// function addListeners() {
+//     let username = document.getElementById("username");
+//     let mobile = document.getElementById("mobile-number");
+//     let email = document.getElementById("email-id");
+
+
+//     let password = document.getElementById("password");
+//     let confirmPassword = document.getElementById("confirm-password");
+//     password.addEventListener( 'input', function()  {
+//         pwdStrength(password.value);
+//     });
+//     password.addEventListener( 'input', matchPasswords);
+//     confirmPassword.addEventListener( 'input', matchPasswords );
+
+
 // }
