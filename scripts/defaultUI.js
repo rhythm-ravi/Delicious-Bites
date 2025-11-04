@@ -24,9 +24,15 @@ function populateNav() {
     let signInOut;
     if (!user.getUserId())      // not logged in
         signInOut = `<a href="login.html">Log In</a>`;
-    else
+    else {
+        // Calculate cart item count
+        const cart = user.getCart();
+        const cartCount = Object.keys(cart).reduce((sum, key) => sum + cart[key], 0);
+        const cartBadge = cartCount > 0 ? `<span class='cart-badge'>${cartCount}</span>` : '';
+        
         signInOut = `
-            <a href="cart.html">Cart</a>
+            <a href="cart.html" class="cart-link">Cart${cartBadge}</a>
+            <a href="order_history.html">Orders</a>
 
             <span class='user-card'>
                 <a>${user.getUserName()}</a>
@@ -36,7 +42,8 @@ function populateNav() {
             </span>
 
 
-        `
+        `;
+    }
     navDiv.innerHTML = `
         <nav>
             <a href="home.html">Home</a>

@@ -8,47 +8,44 @@
 
 }
 .grid {
-    display: flex;          
-    flex-wrap: wrap;
-    gap: 48px;    /*add spacing between cards */
-    justify-content: center;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 38px;    /*add spacing between cards */
+    justify-content: space-evenly;
     /* padding: 24px; */
     width: 100%;
 }
 .menu-entry {
-  /* aspect-ratio: 4/3; */
-  flex: 1 1 420px;      /* Grows to fill space, shrinks if needed, prefers 320px width */
-  max-width: 600px;     /* Cards won't get too wide */
-  min-width: 320px;     /* Cards won't get too small */
   box-sizing: border-box;
-  /* background: #fff;     Example: make cards look like cards */
-  border-radius: 8px;
+  background: #fff;
+  border-radius: 12px;
   box-shadow: 0 2px 6px rgba(0,0,0,0.08);
   padding: 16px;
-  margin: 0;            /* Remove margin, use gap on .grid instead */
+  margin: 20px;
   display: flex;
   flex-direction: column;
   row-gap: 12px;
-  align-items: center;  /* Center content horizontally inside card */
+  align-items: center;
   text-align: center;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  animation: fadeInUp 0.6s ease-out;
 }
-/*
-.menu-entry {
-    flex: 1 1 100%;      one-value syntax, 
-                            basis ie initial size of content box set 
-                            to min-content ; basis is ideally atleast that
-    text-align: center;
-    align-items: center;
-    max-height: 400px;
-    max-width: 600px;
-    margin: 25px 0px;
-}*/
+
+.menu-entry:hover {
+  transform: translateY(-8px) scale(1.02);
+  box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+}
+
 .menu-entry img{
-  aspect-ratio: 1/1;
-    /* height: 80%; */
+    aspect-ratio: 1/1;
     width: 80%;
     border-radius: 20px;
     object-fit: cover;
+    transition: transform 0.3s ease;
+}
+
+.menu-entry:hover img {
+    transform: scale(1.1);
 }
 .menu-entry .details {
     background-color: white;

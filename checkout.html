@@ -1,0 +1,568 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Checkout - Delicious Bites</title>
+    <link rel="stylesheet" href="styles/basestyle.css" />
+    <link rel="stylesheet" href="styles/animations.css" />
+    
+    <style>
+        .checkout-container {
+            max-width: 900px;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        }
+        
+        .checkout-section {
+            margin-bottom: 30px;
+            padding: 20px;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+        }
+        
+        .checkout-section h2 {
+            margin-top: 0;
+            color: #971010;
+            font-size: 1.5em;
+            border-bottom: 2px solid #971010;
+            padding-bottom: 10px;
+        }
+        
+        .address-option {
+            display: flex;
+            align-items: flex-start;
+            padding: 15px;
+            margin: 10px 0;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .address-option:hover {
+            border-color: #971010;
+            background-color: #fff5f5;
+        }
+        
+        .address-option.selected {
+            border-color: #971010;
+            background-color: #fff0f0;
+        }
+        
+        .address-option input[type="radio"] {
+            margin-right: 15px;
+            margin-top: 3px;
+        }
+        
+        .address-details {
+            flex: 1;
+        }
+        
+        .address-details strong {
+            display: block;
+            margin-bottom: 5px;
+            color: #333;
+        }
+        
+        .new-address-form {
+            display: none;
+            margin-top: 15px;
+            padding: 15px;
+            background-color: #f9f9f9;
+            border-radius: 8px;
+        }
+        
+        .new-address-form.active {
+            display: block;
+        }
+        
+        .form-group {
+            margin-bottom: 15px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 600;
+            color: #333;
+        }
+        
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-sizing: border-box;
+            font-family: inherit;
+        }
+        
+        .form-group textarea {
+            resize: vertical;
+            min-height: 60px;
+        }
+        
+        .cart-summary {
+            background-color: #f9f9f9;
+            padding: 15px;
+            border-radius: 8px;
+        }
+        
+        .cart-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px 0;
+            border-bottom: 1px solid #e0e0e0;
+        }
+        
+        .cart-item:last-child {
+            border-bottom: none;
+        }
+        
+        .cart-total {
+            display: flex;
+            justify-content: space-between;
+            font-size: 1.3em;
+            font-weight: bold;
+            color: #971010;
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 2px solid #971010;
+        }
+        
+        .place-order-btn {
+            width: 100%;
+            padding: 15px;
+            font-size: 1.2em;
+            font-weight: bold;
+            background: linear-gradient(135deg, #971010 0%, #7f0c0c 100%);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .place-order-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(151, 16, 16, 0.3);
+        }
+        
+        .place-order-btn:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+            transform: none;
+        }
+        
+        .loading-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.7);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .loading-overlay.active {
+            display: flex;
+        }
+        
+        .loading-content {
+            text-align: center;
+            background: white;
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+        }
+        
+        .loading-content h3 {
+            margin: 20px 0 10px;
+            color: #333;
+        }
+        
+        .loading-content p {
+            color: #666;
+        }
+        
+        .error-message {
+            display: none;
+            padding: 15px;
+            background-color: #fee;
+            border: 1px solid #fcc;
+            border-radius: 8px;
+            color: #c33;
+            margin-bottom: 20px;
+        }
+        
+        .error-message.active {
+            display: block;
+        }
+    </style>
+
+    <script type="text/javascript" src="scripts/defaultUtility.js"></script>
+    <script type="text/javascript" src="scripts/defaultUI.js"></script>
+    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+</head>
+<body>
+    <div id="header-footer"></div>
+    
+    <div class="checkout-container fade-in">
+        <h1>Checkout</h1>
+        
+        <div class="error-message" id="errorMessage"></div>
+        
+        <div class="checkout-section">
+            <h2>Delivery Address</h2>
+            <div id="addressList">
+                <p>Loading addresses...</p>
+            </div>
+            <div class="new-address-form" id="newAddressForm">
+                <h3>New Address</h3>
+                <div class="form-group">
+                    <label>Address Name (Optional)</label>
+                    <input type="text" id="addrName" placeholder="Home, Office, etc.">
+                </div>
+                <div class="form-group">
+                    <label>Address Line 1 *</label>
+                    <input type="text" id="address1" required placeholder="Flat, House no., Building">
+                </div>
+                <div class="form-group">
+                    <label>Address Line 2</label>
+                    <input type="text" id="address2" placeholder="Area, Street, Sector">
+                </div>
+                <div class="form-group">
+                    <label>Landmark</label>
+                    <input type="text" id="landmark" placeholder="Near...">
+                </div>
+                <div class="form-group">
+                    <label>Postal Code *</label>
+                    <input type="text" id="postalCode" required pattern="[0-9]{6}" placeholder="6-digit PIN">
+                </div>
+                <div class="form-group">
+                    <label>State *</label>
+                    <select id="state" required>
+                        <option value="">Select State</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+        
+        <div class="checkout-section">
+            <h2>Payment Method</h2>
+            <div class="form-group">
+                <select id="paymentMethod" required>
+                    <option value="">Select Payment Method</option>
+                </select>
+            </div>
+        </div>
+        
+        <div class="checkout-section">
+            <h2>Order Notes (Optional)</h2>
+            <div class="form-group">
+                <textarea id="orderNotes" placeholder="Any special instructions for your order..."></textarea>
+            </div>
+        </div>
+        
+        <div class="checkout-section">
+            <h2>Order Summary</h2>
+            <div class="cart-summary" id="cartSummary">
+                <p>Loading cart...</p>
+            </div>
+        </div>
+        
+        <button class="place-order-btn" id="placeOrderBtn" disabled>Place Order</button>
+    </div>
+    
+    <div class="loading-overlay" id="loadingOverlay">
+        <div class="loading-content">
+            <div class="spinner"></div>
+            <h3>Processing Your Payment...</h3>
+            <p>Please wait while we process your order</p>
+        </div>
+    </div>
+    
+    <script type="text/javascript" src="scripts/place_order.js"></script>
+    <script>
+        placeBase();
+        
+        let selectedAddressId = null;
+        let addresses = [];
+        let paymentMethods = [];
+        let cartItems = {};
+        
+        // Check if user is logged in
+        if (!user.getUserId()) {
+            alert("Please log in to continue");
+            window.location.href = "login.html";
+        }
+        
+        // Load states
+        const states = [
+            'Andhra Pradesh', 'Arunachal Pradesh', 'Assam', 'Bihar', 'Chhattisgarh',
+            'Goa', 'Gujarat', 'Haryana', 'Himachal Pradesh', 'Jharkhand',
+            'Karnataka', 'Kerala', 'Madhya Pradesh', 'Maharashtra', 'Manipur',
+            'Meghalaya', 'Mizoram', 'Nagaland', 'Odisha', 'Punjab',
+            'Rajasthan', 'Sikkim', 'Tamil Nadu', 'Telangana', 'Tripura',
+            'Uttar Pradesh', 'Uttarakhand', 'West Bengal',
+            'Andaman and Nicobar Islands', 'Chandigarh', 'Dadra and Nagar Haveli and Daman and Diu',
+            'Delhi', 'Jammu and Kashmir', 'Ladakh', 'Lakshadweep', 'Puducherry'
+        ];
+        const stateSelect = document.getElementById('state');
+        states.forEach(state => {
+            const option = document.createElement('option');
+            option.value = state;
+            option.textContent = state;
+            stateSelect.appendChild(option);
+        });
+        
+        // Load addresses
+        async function loadAddresses() {
+            try {
+                const response = await fetch('php/get_addresses.php');
+                const data = await response.json();
+                
+                if (!data.success) {
+                    throw new Error(data.error || 'Failed to load addresses');
+                }
+                
+                addresses = data.addresses;
+                renderAddresses();
+            } catch (error) {
+                console.error('Error loading addresses:', error);
+                document.getElementById('addressList').innerHTML = '<p style="color: red;">Error loading addresses. You can enter a new address below.</p>';
+                document.getElementById('newAddressForm').classList.add('active');
+            }
+        }
+        
+        function renderAddresses() {
+            const addressList = document.getElementById('addressList');
+            
+            if (addresses.length === 0) {
+                addressList.innerHTML = '<p>No saved addresses. Please enter a new address below.</p>';
+                document.getElementById('newAddressForm').classList.add('active');
+                return;
+            }
+            
+            let html = '';
+            addresses.forEach((addr, index) => {
+                html += `
+                    <div class="address-option" onclick="selectAddress(${addr.id})">
+                        <input type="radio" name="address" id="addr_${addr.id}" value="${addr.id}">
+                        <div class="address-details">
+                            <strong>${addr.name || 'Address ' + (index + 1)}</strong>
+                            <div>${addr.address1}</div>
+                            ${addr.address2 ? `<div>${addr.address2}</div>` : ''}
+                            ${addr.landmark ? `<div>Landmark: ${addr.landmark}</div>` : ''}
+                            <div>${addr.postal_code}, ${addr.state}</div>
+                        </div>
+                    </div>
+                `;
+            });
+            
+            html += `
+                <div class="address-option" onclick="selectNewAddress()">
+                    <input type="radio" name="address" id="addr_new" value="new">
+                    <div class="address-details">
+                        <strong>+ Add New Address</strong>
+                    </div>
+                </div>
+            `;
+            
+            addressList.innerHTML = html;
+        }
+        
+        function selectAddress(addressId) {
+            selectedAddressId = addressId;
+            document.getElementById('addr_' + addressId).checked = true;
+            document.querySelectorAll('.address-option').forEach(opt => opt.classList.remove('selected'));
+            document.getElementById('addr_' + addressId).parentElement.classList.add('selected');
+            document.getElementById('newAddressForm').classList.remove('active');
+            checkFormValidity();
+        }
+        
+        function selectNewAddress() {
+            selectedAddressId = 'new';
+            document.getElementById('addr_new').checked = true;
+            document.querySelectorAll('.address-option').forEach(opt => opt.classList.remove('selected'));
+            document.getElementById('addr_new').parentElement.classList.add('selected');
+            document.getElementById('newAddressForm').classList.add('active');
+            checkFormValidity();
+        }
+        
+        // Load payment methods
+        async function loadPaymentMethods() {
+            try {
+                const response = await fetch('php/helper.php');
+                const menu = await response.json();
+                
+                // For now, hardcode payment methods (they're already in DB)
+                paymentMethods = [
+                    {id: 1, name: 'Credit Card'},
+                    {id: 2, name: 'Debit Card'},
+                    {id: 3, name: 'PayPal'},
+                    {id: 4, name: 'Stripe'},
+                    {id: 5, name: 'Cash on Delivery'},
+                    {id: 6, name: 'UPI'}
+                ];
+                
+                const select = document.getElementById('paymentMethod');
+                paymentMethods.forEach(method => {
+                    const option = document.createElement('option');
+                    option.value = method.id;
+                    option.textContent = method.name;
+                    select.appendChild(option);
+                });
+            } catch (error) {
+                console.error('Error loading payment methods:', error);
+            }
+        }
+        
+        // Load cart
+        async function loadCart() {
+            try {
+                await user.fetchCart();
+                cartItems = user.getCart();
+                
+                if (Object.keys(cartItems).length === 0) {
+                    alert('Your cart is empty');
+                    window.location.href = 'home.html';
+                    return;
+                }
+                
+                // Fetch menu to get prices
+                await platform.getMenu();
+                const menu = JSON.parse(localStorage.getItem('menu'));
+                
+                let html = '';
+                let total = 0;
+                
+                for (let itemId in cartItems) {
+                    const item = menu[itemId];
+                    if (item) {
+                        const qty = cartItems[itemId];
+                        const itemTotal = item.price * qty;
+                        total += itemTotal;
+                        
+                        html += `
+                            <div class="cart-item">
+                                <div>
+                                    <strong>${item.name}</strong><br>
+                                    <span style="color: #666;">$${item.price} x ${qty}</span>
+                                </div>
+                                <div>$${itemTotal.toFixed(2)}</div>
+                            </div>
+                        `;
+                    }
+                }
+                
+                html += `
+                    <div class="cart-total">
+                        <span>Total:</span>
+                        <span>$${total.toFixed(2)}</span>
+                    </div>
+                `;
+                
+                document.getElementById('cartSummary').innerHTML = html;
+            } catch (error) {
+                console.error('Error loading cart:', error);
+                document.getElementById('cartSummary').innerHTML = '<p style="color: red;">Error loading cart</p>';
+            }
+        }
+        
+        function checkFormValidity() {
+            const paymentMethod = document.getElementById('paymentMethod').value;
+            let addressValid = false;
+            
+            if (selectedAddressId === 'new') {
+                const address1 = document.getElementById('address1').value.trim();
+                const postalCode = document.getElementById('postalCode').value.trim();
+                const state = document.getElementById('state').value;
+                addressValid = address1 && postalCode && state && /^[0-9]{6}$/.test(postalCode);
+            } else if (selectedAddressId) {
+                addressValid = true;
+            }
+            
+            document.getElementById('placeOrderBtn').disabled = !(addressValid && paymentMethod);
+        }
+        
+        // Event listeners
+        document.getElementById('paymentMethod').addEventListener('change', checkFormValidity);
+        document.getElementById('address1').addEventListener('input', checkFormValidity);
+        document.getElementById('postalCode').addEventListener('input', checkFormValidity);
+        document.getElementById('state').addEventListener('change', checkFormValidity);
+        
+        document.getElementById('placeOrderBtn').addEventListener('click', async function() {
+            const btn = this;
+            btn.disabled = true;
+            
+            const errorMsg = document.getElementById('errorMessage');
+            errorMsg.classList.remove('active');
+            
+            try {
+                const paymentMethodId = document.getElementById('paymentMethod').value;
+                const notes = document.getElementById('orderNotes').value;
+                
+                let addressId = null;
+                let newAddress = null;
+                
+                if (selectedAddressId === 'new') {
+                    newAddress = {
+                        name: document.getElementById('addrName').value || null,
+                        address1: document.getElementById('address1').value,
+                        address2: document.getElementById('address2').value || null,
+                        landmark: document.getElementById('landmark').value || null,
+                        postal_code: document.getElementById('postalCode').value,
+                        state: document.getElementById('state').value
+                    };
+                } else {
+                    addressId = selectedAddressId;
+                }
+                
+                // Show loading overlay
+                document.getElementById('loadingOverlay').classList.add('active');
+                
+                // Place order and process payment
+                const result = await placeOrder(addressId, paymentMethodId, notes, newAddress);
+                
+                // Hide loading overlay
+                document.getElementById('loadingOverlay').classList.remove('active');
+                
+                if (result.success) {
+                    // Clear local cart
+                    localStorage.removeItem('cart');
+                    localStorage.removeItem('cartTimestamp');
+                    
+                    // Redirect to confirmation page
+                    window.location.href = `order_confirmation.html?order_id=${result.order_id}`;
+                } else {
+                    errorMsg.textContent = result.message || 'Payment failed. Please try again.';
+                    errorMsg.classList.add('active');
+                    errorMsg.classList.add('shake');
+                    setTimeout(() => errorMsg.classList.remove('shake'), 500);
+                    btn.disabled = false;
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                errorMsg.textContent = 'An error occurred. Please try again.';
+                errorMsg.classList.add('active');
+                document.getElementById('loadingOverlay').classList.remove('active');
+                btn.disabled = false;
+            }
+        });
+        
+        // Initialize
+        loadAddresses();
+        loadPaymentMethods();
+        loadCart();
+    </script>
+</body>
+</html>

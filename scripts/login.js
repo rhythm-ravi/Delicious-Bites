@@ -21,6 +21,9 @@ function handleLogin(event) {
 
             // console.log(data.items[2]);
             alert(`Welcome ${user.getUserName()}!`);
+            
+            // Redirect to home page
+            window.location.href = 'home.html';
         } else {
             console.log(data);
             console.error(data.error);

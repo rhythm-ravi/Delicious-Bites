@@ -26,7 +26,7 @@ function renderCart() {
 
 // only issue rn is if user signs-out and then in OR opens on diff browser, item del, no alert.  (Think)
 // The cart is always correct though
-function readyCart(menu) {                  ///////////////////   NEED TO REVAMP this function
+function readyCart(menu) {
         console.log("halo");
         window.customElements.define('cart-entry', CartEntry);
         window.customElements.define('item-interact', CartItemInteract);
@@ -35,13 +35,31 @@ function readyCart(menu) {                  ///////////////////   NEED TO REVAMP
 
         let cart = user.getCart();
         console.log(menu);  console.log(cart);
+        
+        const cartContainer = document.querySelector(".cart");
+        const checkoutDiv = document.querySelector(".checkout");
+        
+        // Check if cart is empty
+        if (Object.keys(cart).length === 0) {
+            cartContainer.innerHTML = `
+                <div class="empty-cart">
+                    <div class="empty-cart-icon">🛒</div>
+                    <h2>Your cart is empty</h2>
+                    <p>Looks like you haven't added any items yet!</p>
+                    <a href="home.html" class="item-btn">Browse Menu</a>
+                </div>
+            `;
+            checkoutDiv.style.display = 'none';
+            return;
+        }
+        
         for (let key in cart) {     // key is item id
             let item = menu[key];
             // if item available in menu
             if (menu[key] && menu[key].availability) {
                 entry = new CartEntry(key, item.name, item.price);             
                 price += item.price * cart[key];
-                document.querySelector(".cart").appendChild(entry);
+                cartContainer.appendChild(entry);
                 i+=1;
             }
             else {
@@ -49,20 +67,16 @@ function readyCart(menu) {                  ///////////////////   NEED TO REVAMP
             }
         }
 
-
-        // const total = document.createElement("tr");
-        // total.innerHTML =  `
-        //     <td colspan="4" class="summary">Total Amount Payable</td>
-        //     <td class="total-amount">${price ? price : "--"}</td>
-        // `;
-
-        // cartBody.appendChild(total);
-        // cartBody.appendChild(total);
-
-        // const temp = new InteractButton(menu[0].id);
-        // cartBody.appendChild(temp);
-
-
+        // Add total amount display
+        const totalDiv = document.createElement("div");
+        totalDiv.className = "cart-total-section";
+        totalDiv.innerHTML = `
+            <div class="cart-total-row">
+                <span class="total-label">Total Amount:</span>
+                <span class="total-amount">$${price.toFixed(2)}</span>
+            </div>
+        `;
+        cartContainer.appendChild(totalDiv);
 }
 
         // menu.forEach(item => {

@@ -1,0 +1,539 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Order History - Delicious Bites</title>
+    <link rel="stylesheet" href="styles/basestyle.css" />
+    <link rel="stylesheet" href="styles/animations.css" />
+    
+    <style>
+        .history-container {
+            max-width: 1200px;
+            margin: 20px auto;
+            padding: 20px;
+            min-height: 60vh;
+        }
+        
+        .history-header {
+            text-align: center;
+            margin-bottom: 40px;
+            animation: fadeInDown 0.6s ease-out;
+        }
+        
+        .history-header h1 {
+            color: #971010;
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+        
+        .history-header p {
+            color: #666;
+            font-size: 1.1em;
+        }
+        
+        .order-card {
+            background: white;
+            border-radius: 16px;
+            padding: 25px;
+            margin-bottom: 25px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            animation: slideInRight 0.5s ease-out;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .order-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 5px;
+            height: 100%;
+            background: linear-gradient(135deg, #971010, #7f0c0c);
+        }
+        
+        .order-card.status-Confirmed::before { background: linear-gradient(135deg, #4CAF50, #45a049); }
+        .order-card.status-Preparing::before { background: linear-gradient(135deg, #FF9800, #F57C00); }
+        .order-card.status-Delivered::before { background: linear-gradient(135deg, #2196F3, #1976D2); }
+        .order-card.status-Cancelled::before { background: linear-gradient(135deg, #f44336, #d32f2f); }
+        
+        .order-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
+        }
+        
+        .order-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+        
+        .order-id {
+            font-size: 1.4em;
+            font-weight: bold;
+            color: #333;
+        }
+        
+        .order-date {
+            color: #666;
+            font-size: 0.95em;
+        }
+        
+        .order-status {
+            display: inline-block;
+            padding: 8px 20px;
+            border-radius: 20px;
+            font-weight: 600;
+            font-size: 0.9em;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            animation: pulse 2s infinite;
+        }
+        
+        .status-Placed {
+            background: #FFF3E0;
+            color: #E65100;
+        }
+        
+        .status-Confirmed {
+            background: #E8F5E9;
+            color: #2E7D32;
+        }
+        
+        .status-Preparing {
+            background: #FFF3E0;
+            color: #EF6C00;
+        }
+        
+        .status-Out.for.Delivery,
+        .status-Out_for_Delivery {
+            background: #E3F2FD;
+            color: #1565C0;
+        }
+        
+        .status-Delivered {
+            background: #E8F5E9;
+            color: #1B5E20;
+        }
+        
+        .status-Cancelled {
+            background: #FFEBEE;
+            color: #C62828;
+        }
+        
+        .order-items {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            gap: 15px;
+            margin: 20px 0;
+        }
+        
+        .order-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 15px;
+            background: #f9f9f9;
+            border-radius: 12px;
+            transition: all 0.3s ease;
+        }
+        
+        .order-item:hover {
+            background: #f0f0f0;
+            transform: scale(1.05);
+        }
+        
+        .order-item-img {
+            width: 80px;
+            height: 80px;
+            border-radius: 12px;
+            object-fit: cover;
+            margin-bottom: 10px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+        
+        .order-item-name {
+            font-weight: 600;
+            font-size: 0.9em;
+            text-align: center;
+            margin-bottom: 5px;
+            color: #333;
+        }
+        
+        .order-item-details {
+            font-size: 0.85em;
+            color: #666;
+        }
+        
+        .order-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-top: 20px;
+            border-top: 2px solid #f0f0f0;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+        
+        .order-total {
+            font-size: 1.5em;
+            font-weight: bold;
+            color: #971010;
+        }
+        
+        .payment-info {
+            text-align: right;
+            color: #666;
+        }
+        
+        .payment-method {
+            font-weight: 600;
+            color: #333;
+        }
+        
+        .payment-status {
+            font-size: 0.9em;
+            padding: 4px 12px;
+            border-radius: 12px;
+            display: inline-block;
+            margin-top: 5px;
+        }
+        
+        .payment-status.Completed {
+            background: #E8F5E9;
+            color: #2E7D32;
+        }
+        
+        .payment-status.Pending {
+            background: #FFF3E0;
+            color: #EF6C00;
+        }
+        
+        .payment-status.Failed {
+            background: #FFEBEE;
+            color: #C62828;
+        }
+        
+        .address-info {
+            margin: 15px 0;
+            padding: 15px;
+            background: #f9f9f9;
+            border-radius: 8px;
+            font-size: 0.95em;
+            color: #555;
+        }
+        
+        .address-info strong {
+            color: #333;
+            display: block;
+            margin-bottom: 5px;
+        }
+        
+        .empty-state {
+            text-align: center;
+            padding: 80px 20px;
+            animation: fadeInUp 0.6s ease-out;
+        }
+        
+        .empty-icon {
+            font-size: 100px;
+            margin-bottom: 20px;
+            opacity: 0.3;
+        }
+        
+        .empty-state h2 {
+            color: #333;
+            margin-bottom: 15px;
+        }
+        
+        .empty-state p {
+            color: #666;
+            font-size: 1.1em;
+            margin-bottom: 30px;
+        }
+        
+        .loading-state {
+            text-align: center;
+            padding: 80px 20px;
+        }
+        
+        .order-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+        }
+        
+        .action-btn {
+            padding: 8px 20px;
+            border-radius: 8px;
+            border: 2px solid #971010;
+            background: white;
+            color: #971010;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .action-btn:hover {
+            background: #971010;
+            color: white;
+            transform: translateY(-2px);
+        }
+        
+        .action-btn.primary {
+            background: linear-gradient(135deg, #971010, #7f0c0c);
+            color: white;
+            border: none;
+        }
+        
+        .action-btn.primary:hover {
+            background: linear-gradient(135deg, #b01212, #971010);
+        }
+        
+        /* Filter section */
+        .filter-section {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+            animation: fadeIn 0.8s ease-out;
+        }
+        
+        .filter-btn {
+            padding: 10px 25px;
+            border-radius: 25px;
+            border: 2px solid #e0e0e0;
+            background: white;
+            color: #666;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .filter-btn.active {
+            border-color: #971010;
+            background: #971010;
+            color: white;
+            transform: scale(1.05);
+        }
+        
+        .filter-btn:hover {
+            border-color: #971010;
+            color: #971010;
+        }
+        
+        .filter-btn.active:hover {
+            color: white;
+        }
+    </style>
+
+    <script type="text/javascript" src="scripts/defaultUtility.js"></script>
+    <script type="text/javascript" src="scripts/defaultUI.js"></script>
+    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+    <script type="text/javascript" src="scripts/animations.js"></script>
+</head>
+<body>
+    <div id="header-footer"></div>
+    
+    <div class="history-container">
+        <div class="history-header">
+            <h1>🍽️ My Order History</h1>
+            <p>Track your delicious journey with us!</p>
+        </div>
+        
+        <div class="filter-section" id="filterSection">
+            <button class="filter-btn active" data-status="all">All Orders</button>
+            <!-- <button class="filter-btn" data-status="Placed">Placed</button> -->
+            <button class="filter-btn" data-status="Confirmed">Confirmed</button>
+            <!-- <button class="filter-btn" data-status="Preparing">Preparing</button> -->
+            <button class="filter-btn" data-status="Delivered">Delivered</button>
+        </div>
+        
+        <div id="ordersContainer">
+            <div class="loading-state">
+                <div class="spinner"></div>
+                <p>Loading your order history...</p>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        placeBase();
+        
+        let allOrders = [];
+        let currentFilter = 'all';
+        
+        // Check if user is logged in
+        if (!user.getUserId()) {
+            alert("Please log in to view your order history");
+            window.location.href = "login.html";
+        }
+        
+        // Load order history
+        async function loadOrderHistory() {
+            try {
+                const response = await fetch('php/get_order_history.php');
+                const data = await response.json();
+                
+                if (!data.success) {
+                    throw new Error(data.error || 'Failed to load order history');
+                }
+                
+                allOrders = data.orders;
+                renderOrders();
+                
+            } catch (error) {
+                console.error('Error loading order history:', error);
+                document.getElementById('ordersContainer').innerHTML = `
+                    <div class="empty-state">
+                        <div class="empty-icon">❌</div>
+                        <h2>Error Loading Orders</h2>
+                        <p>${error.message}</p>
+                        <button class="action-btn primary" onclick="loadOrderHistory()">Try Again</button>
+                    </div>
+                `;
+            }
+        }
+        
+        function renderOrders() {
+            const container = document.getElementById('ordersContainer');
+            
+            // Filter orders
+            let orders = allOrders;
+            if (currentFilter !== 'all') {
+                orders = allOrders.filter(order => order.status === currentFilter);
+            }
+            
+            if (orders.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-state">
+                        <div class="empty-icon">🍽️</div>
+                        <h2>No Orders Yet</h2>
+                        <p>Start your culinary journey by placing your first order!</p>
+                        <a href="home.html" class="action-btn primary">Browse Menu</a>
+                    </div>
+                `;
+                return;
+            }
+            
+            let html = '';
+            orders.forEach((order, index) => {
+                const orderDate = new Date(order.order_time);
+                const statusClass = order.status.replace(/\s+/g, '_');
+                
+                html += `
+                    <div class="order-card status-${statusClass}" style="animation-delay: ${index * 0.1}s">
+                        <div class="order-header">
+                            <div>
+                                <div class="order-id">Order #${order.id}</div>
+                                <div class="order-date">${orderDate.toLocaleDateString('en-US', { 
+                                    year: 'numeric', 
+                                    month: 'long', 
+                                    day: 'numeric',
+                                    hour: '2-digit',
+                                    minute: '2-digit'
+                                })}</div>
+                            </div>
+                            <div class="order-status status-${statusClass}">
+                                ${order.status}
+                            </div>
+                        </div>
+                        
+                        <div class="order-items">
+                            ${order.items.map(item => `
+                                <div class="order-item">
+                                    <img class="order-item-img" 
+                                         src="assets/img/menu/${item.item_id}-thumbnail.jpg" 
+                                         alt="${item.name}"
+                                         onerror="this.src='assets/img/menu/default.jpg'">
+                                    <div class="order-item-name">${item.name}</div>
+                                    <div class="order-item-details">
+                                        $${parseFloat(item.price).toFixed(2)} × ${item.qty}
+                                    </div>
+                                </div>
+                            `).join('')}
+                        </div>
+                        
+                        ${order.address ? `
+                        <div class="address-info">
+                            <strong>📍 Delivery Address:</strong>
+                            ${order.address.address1}
+                            ${order.address.address2 ? ', ' + order.address.address2 : ''}
+                            ${order.address.landmark ? '<br>Landmark: ' + order.address.landmark : ''}
+                            <br>${order.address.postal_code}, ${order.address.state}
+                        </div>
+                        ` : ''}
+                        
+                        ${order.notes ? `
+                        <div class="address-info">
+                            <strong>📝 Note:</strong>
+                            ${order.notes}
+                        </div>
+                        ` : ''}
+                        
+                        <div class="order-footer">
+                            <div class="order-total">
+                                Total: $${parseFloat(order.total_amount).toFixed(2)}
+                            </div>
+                            <div class="payment-info">
+                                <div class="payment-method">💳 ${order.method_name || 'N/A'}</div>
+                                <div class="payment-status ${order.payment_status}">
+                                    ${order.payment_status}
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="order-actions">
+                            <button class="action-btn" onclick="reorder(${order.id})">🔄 Reorder</button>
+                            ${order.status === 'Delivered' ? 
+                                '<button class="action-btn" onclick="alert(\'Review feature coming soon!\')">⭐ Write Review</button>' : 
+                                '<button class="action-btn" onclick="alert(\'Tracking feature coming soon!\')">📍 Track Order</button>'}
+                        </div>
+                    </div>
+                `;
+            });
+            
+            container.innerHTML = html;
+        }
+        
+        // Filter functionality
+        document.querySelectorAll('.filter-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+                this.classList.add('active');
+                currentFilter = this.dataset.status;
+                renderOrders();
+            });
+        });
+        
+        // Reorder functionality
+        async function reorder(orderId) {
+            const order = allOrders.find(o => o.id === orderId);
+            if (!order) return;
+            
+            // Add items back to cart
+            let added = 0;
+            for (const item of order.items) {
+                await user.updateItem(item.item_id, item.qty);
+                added++;
+            }
+            
+            if (added > 0) {
+                window.animationUtils.showToast(`${added} item(s) added to cart!`, 'success');
+                setTimeout(() => {
+                    window.location.href = 'cart.html';
+                }, 1500);
+            }
+        }
+        
+        // Initialize
+        loadOrderHistory();
+    </script>
+</body>
+</html>

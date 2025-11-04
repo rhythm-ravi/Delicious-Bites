@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inventory Management - Delicious Bites Admin</title>
+    <link rel="stylesheet" href="styles/admin.css">
+</head>
+<body>
+    <div class="admin-container">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <h2>🍴 Delicious Bites</h2>
+                <p>Admin Panel</p>
+            </div>
+            <nav class="sidebar-nav">
+                <a href="index.html" class="nav-item" data-page="dashboard">
+                    <span>📊</span> Dashboard
+                </a>
+                <a href="orders.html" class="nav-item" data-page="orders">
+                    <span>📦</span> Orders
+                </a>
+                <a href="inventory.html" class="nav-item" data-page="inventory">
+                    <span>🍔</span> Inventory
+                </a>
+                <a href="customers.html" class="nav-item" data-page="customers">
+                    <span>👥</span> Customers
+                </a>
+                <div class="nav-item" data-page="logout">
+                    <span>🚪</span> Logout
+                </div>
+            </nav>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Top Bar -->
+            <div class="top-bar">
+                <div class="top-bar-left">
+                    <h1>Inventory Management</h1>
+                    <p class="current-time">Loading...</p>
+                </div>
+                <div class="top-bar-right">
+                    <div class="admin-info">
+                        <div class="admin-name">Admin</div>
+                        <div class="admin-role">Administrator</div>
+                    </div>
+                    <button class="btn btn-danger btn-sm" id="logoutBtn">Logout</button>
+                </div>
+            </div>
+
+            <!-- Inventory Table -->
+            <div class="table-card">
+                <h3>Menu Items</h3>
+                <div class="table-controls">
+                    <div class="search-box">
+                        <input type="text" id="searchInput" placeholder="Search items...">
+                    </div>
+                </div>
+                <table id="inventoryTable">
+                    <thead>
+                        <tr>
+                            <th>Code</th>
+                            <th>Name</th>
+                            <th>Price (Click to Edit)</th>
+                            <th>Available</th>
+                            <th>Status</th>
+                            <th>Description</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="inventoryTableBody">
+                        <tr>
+                            <td colspan="7" class="text-center">Loading...</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </main>
+    </div>
+
+    <!-- Edit Item Modal -->
+    <div id="editItemModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Edit Item</h2>
+                <button class="modal-close" onclick="hideModal('editItemModal')">&times;</button>
+            </div>
+            <div class="modal-body">
+                <input type="hidden" id="editItemId">
+                <div class="form-group">
+                    <label for="editItemName">Item Name</label>
+                    <input type="text" id="editItemName" required>
+                </div>
+                <div class="form-group">
+                    <label for="editItemPrice">Price</label>
+                    <input type="number" id="editItemPrice" step="0.01" min="0" required>
+                </div>
+                <div class="form-group">
+                    <label for="editItemDesc">Description</label>
+                    <textarea id="editItemDesc"></textarea>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="hideModal('editItemModal')">Cancel</button>
+                <button class="btn btn-primary" onclick="saveItemChanges()">Save Changes</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="scripts/admin.js"></script>
+    <script src="scripts/inventory.js"></script>
+</body>
+</html>
