@@ -77,10 +77,7 @@
 ### Complete Customer Journey
 **Browse menu → Add to cart → Checkout → Payment → Order confirmation**
 
-<video width="640" controls>
-  <source src="docs/videos/customer-demo.mp4" type="video/mp4">
-  Your browser does not support the video tag.
-</video>
+![Customer Journey Demonstration](docs/videos/customer-demo.gif)
 
 *Full user flow demonstration showing the ordering process from start to finish*
 
@@ -89,10 +86,7 @@
 ### Admin Dashboard Walkthrough
 **Dashboard analytics → Order management → Inventory control → Customer insights**
 
-<video width="640" controls>
-  <source src="docs/videos/admin-demo.mp4" type="video/mp4">
-  Your browser does not support the video tag.
-</video>
+![Admin Dashboard Walkthrough](docs/videos/admin-demo.gif)
 
 *Complete admin panel walkthrough showcasing all management features*
 
