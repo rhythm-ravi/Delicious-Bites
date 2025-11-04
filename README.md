@@ -365,33 +365,6 @@ Delicious-Bites-Testing/
 
 ---
 
-## 🗺️ Roadmap
-
-### ✅ Completed Features
-- Three-tier LAMP architecture
-- User authentication with password hashing
-- Dynamic menu with real-time availability
-- Shopping cart with persistence
-- Complete checkout and payment flow
-- Admin dashboard with analytics
-- Order management system
-- Inventory management
-
-### 🚧 In Progress
-- Email notifications (order confirmation, status updates)
-- Customer order history page
-- Enhanced admin reporting
-
-### 📋 Planned Features
-- SMS notifications via Twilio
-- Real-time notifications with WebSockets
-- Customer reviews and ratings
-- Loyalty points system
-- Mobile app (React Native)
-- Multi-restaurant support
-- Delivery tracking with maps
-
----
 
 ## 🤝 Contributing
 
